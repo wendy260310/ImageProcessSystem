@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{1810bead-58ef-4d07-8542-f809b27189f9}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{0f2e8fbf-8c33-43f3-8259-a8703182c9ea}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{09e5d3ce-9406-4310-8b8b-3045b326f773}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Para">
+      <UniqueIdentifier>{3b7ecf6e-6c95-4e59-a88e-d43eb4ab8d57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImageProcess">
+      <UniqueIdentifier>{f594b5e5-6562-4ade-9c0a-583da9538e5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStructure">
+      <UniqueIdentifier>{cc88de47-655f-44ac-a5aa-b05cbcea1fe9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GeneratedFiles\Debug\moc_imageprocesssystem.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_imageprocesssystem.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\qrc_imageprocesssystem.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="imageprocesssystem.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="faceDetector.cpp">
+      <Filter>ImageProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorCorrection.cpp">
+      <Filter>ImageProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="highlightDetection.cpp">
+      <Filter>ImageProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorSpaceTransitionClass.cpp">
+      <Filter>ImageProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_setColorParametersDialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_setColorParametersDialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="setColorParametersDialog.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="highlightRemoval.cpp">
+      <Filter>ImageProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="BasisOperation.cpp">
+      <Filter>ImageProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractiveLocalEnhencementWidget.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractiveColorCorrectionWidget.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="OriginalImageLabel.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEnhencementLabel.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="HighlightLabel.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractiveImageLabel.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_LocalEnhencementLabel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_LocalEnhencementLabel.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_HighlightLabel.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_HighlightLabel.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractiveHighlightWidget.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractiveFacelLabel.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractiveColorLevel.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractiveColorBalanceWidget.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SLIC.cpp">
+      <Filter>ImageProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_InteractiveLocalEnhencementWidget.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_InteractiveLocalEnhencementWidget.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="imageprocesssystem.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="imageprocesssystem.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="imageprocesssystem.h">
+      <Filter>UI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ColorCorrection.h">
+      <Filter>ImageProcess</Filter>
+    </CustomBuild>
+    <CustomBuild Include="setColorParameters.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="setColorParametersDialog.h">
+      <Filter>UI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="LocalEnhencementLabel.h">
+      <Filter>UI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="HighlightLabel.h">
+      <Filter>UI</Filter>
+    </CustomBuild>
+    <CustomBuild Include="InteractiveLocalEnhencementWidget.h">
+      <Filter>UI</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GeneratedFiles\ui_imageprocesssystem.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="parameters.h">
+      <Filter>Para</Filter>
+    </ClInclude>
+    <ClInclude Include="faceDetector.h">
+      <Filter>ImageProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="highlightDetection.h">
+      <Filter>ImageProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorSpaceTransitionClass.h">
+      <Filter>ImageProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_setColorParameters.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="highlightRemoval.h">
+      <Filter>ImageProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="MinNHeap.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="BasisOperation.h">
+      <Filter>ImageProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="PatchSparsity.h">
+      <Filter>DataStructure</Filter>
+    </ClInclude>
+    <ClInclude Include="header.h">
+      <Filter>Para</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractiveColorCorrectionWidget.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractiveHighlightWidget.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="OriginalImageLabel.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractiveImageLabel.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractiveFaceLabel.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractiveColorLevel.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractiveColorBalanceWidget.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SLIC.h">
+      <Filter>ImageProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Poisson.h">
+      <Filter>ImageProcess</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

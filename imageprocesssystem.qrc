@@ -1,0 +1,25 @@
+<RCC>
+  <qresource prefix="/pictures">
+    <file>superpixel.jpg</file>
+    <file>colorbalancenotselected.jpg</file>
+    <file>colorbalanceselected.jpg</file>
+    <file>colorlevelnotselected.jpg</file>
+    <file>colorlevelselected.jpg</file>
+    <file>facenotselected.jpg</file>
+    <file>faceselected.jpg</file>
+    <file>highlightnotselected.jpg</file>
+    <file>highlightselected.jpg</file>
+    <file>autocolorcorrection.jpg</file>
+    <file>cancel.png</file>
+    <file>switch.png</file>
+    <file>highlight.png</file>
+    <file>highlightremoval.png</file>
+    <file>face.jpg</file>
+    <file>save.png</file>
+    <file>open.png</file>
+    <file>localenhencementnotselected.jpg</file>
+    <file>localenhencementselected.jpg</file>
+    <file>colorcorrectnotselected.jpg</file>
+    <file>colorcorrectselected.jpg</file>
+  </qresource>
+</RCC>

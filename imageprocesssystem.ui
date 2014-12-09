@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ImageProcessSystemClass</class>
+ <widget class="QMainWindow" name="ImageProcessSystemClass">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1061</width>
+    <height>727</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ImageProcessSystem</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <widget class="QLabel" name="pixelValueLabel">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>520</y>
+      <width>102</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>164</width>
+      <height>624</height>
+     </rect>
+    </property>
+    <property name="verticalScrollBarPolicy">
+     <enum>Qt::ScrollBarAlwaysOn</enum>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1061</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_Tools">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>&amp;Tools</string>
+    </property>
+    <widget class="QMenu" name="faceDetetingMenu">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>人脸检测</string>
+     </property>
+     <addaction name="faceDetectingColorModelAction"/>
+     <addaction name="faceDetectingCombineAction"/>
+    </widget>
+    <addaction name="faceDetetingMenu"/>
+    <addaction name="faceMeansStatisticsAction"/>
+    <addaction name="sharpenAction"/>
+    <addaction name="highlightBatchAction"/>
+   </widget>
+   <widget class="QMenu" name="menu_Settings">
+    <property name="title">
+     <string>&amp;Settings</string>
+    </property>
+    <addaction name="setColorParametersAction"/>
+   </widget>
+   <addaction name="menu_Tools"/>
+   <addaction name="menu_Settings"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>48</width>
+     <height>48</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpen"/>
+   <addaction name="actionSave"/>
+   <addaction name="actionColorCorrection"/>
+   <addaction name="actionFace"/>
+   <addaction name="actionHighLightDetection"/>
+   <addaction name="actionHighlightRemoval"/>
+   <addaction name="actionSuperPixel"/>
+   <addaction name="actionCancel"/>
+   <addaction name="separator"/>
+   <addaction name="actionInteractiveLocalEnhencement"/>
+   <addaction name="actionInteractiveColorCorrection"/>
+   <addaction name="actionInteractiveHighlight"/>
+   <addaction name="actionInteractiveFace"/>
+   <addaction name="actionInteractiveColorLevel"/>
+   <addaction name="actionInteractiveColorBalance"/>
+   <addaction name="actionSwitch"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <action name="actionOpen">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/open.png</normaloff>:/pictures/open.png</iconset>
+   </property>
+   <property name="text">
+    <string>打开文件</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/save.png</normaloff>:/pictures/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>保存</string>
+   </property>
+  </action>
+  <action name="actionColorCorrection">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/autocolorcorrection.jpg</normaloff>:/pictures/autocolorcorrection.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>自动色彩</string>
+   </property>
+  </action>
+  <action name="faceDetectingColorModelAction">
+   <property name="text">
+    <string>色彩模型</string>
+   </property>
+  </action>
+  <action name="faceDetectingCombineAction">
+   <property name="text">
+    <string>&amp;Combine</string>
+   </property>
+  </action>
+  <action name="actionFace">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/face.jpg</normaloff>:/pictures/face.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>人脸检测</string>
+   </property>
+  </action>
+  <action name="actionHighLightDetection">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/highlight.png</normaloff>:/pictures/highlight.png</iconset>
+   </property>
+   <property name="text">
+    <string>高光检测</string>
+   </property>
+  </action>
+  <action name="setColorParametersAction">
+   <property name="text">
+    <string>人脸肤色参数</string>
+   </property>
+  </action>
+  <action name="actionHighlightRemoval">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/highlightremoval.png</normaloff>:/pictures/highlightremoval.png</iconset>
+   </property>
+   <property name="text">
+    <string>高光去除</string>
+   </property>
+  </action>
+  <action name="actionCancel">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/cancel.png</normaloff>:/pictures/cancel.png</iconset>
+   </property>
+   <property name="text">
+    <string>上一步</string>
+   </property>
+  </action>
+  <action name="faceMeansStatisticsAction">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>脸部均值统计</string>
+   </property>
+  </action>
+  <action name="sharpenAction">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>锐化</string>
+   </property>
+  </action>
+  <action name="highlightBatchAction">
+   <property name="text">
+    <string>高光批处理</string>
+   </property>
+  </action>
+  <action name="actionInteractiveLocalEnhencement">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/localenhencementnotselected.jpg</normaloff>:/pictures/localenhencementnotselected.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>局部交互</string>
+   </property>
+  </action>
+  <action name="actionInteractiveColorCorrection">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/colorcorrectnotselected.jpg</normaloff>:/pictures/colorcorrectnotselected.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>色彩交互</string>
+   </property>
+  </action>
+  <action name="actionSwitch">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/switch.png</normaloff>:/pictures/switch.png</iconset>
+   </property>
+   <property name="text">
+    <string>切换，交互完了点这个保存！</string>
+   </property>
+  </action>
+  <action name="actionInteractiveHighlight">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/highlightnotselected.jpg</normaloff>:/pictures/highlightnotselected.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>暂时不要用</string>
+   </property>
+  </action>
+  <action name="actionInteractiveFace">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/facenotselected.jpg</normaloff>:/pictures/facenotselected.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>InteractiveFace</string>
+   </property>
+  </action>
+  <action name="actionInteractiveColorLevel">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/colorlevelnotselected.jpg</normaloff>:/pictures/colorlevelnotselected.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>InteractiveColorLevel</string>
+   </property>
+  </action>
+  <action name="actionInteractiveColorBalance">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/colorbalancenotselected.jpg</normaloff>:/pictures/colorbalancenotselected.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>InteractiveColorBalance</string>
+   </property>
+  </action>
+  <action name="actionSuperPixel">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/superpixel.jpg</normaloff>:/pictures/superpixel.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>SuperPixel</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="imageprocesssystem.qrc"/>
+ </resources>
+ <connections/>
+</ui>
