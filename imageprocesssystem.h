@@ -84,18 +84,18 @@ private:
 	void clearImgaes();
 	//face location
 	Rect face;
-	Mat highlightMask;
+	MatWrapper<uchar> highlightMask;
 	vector<QString> fileNames;
 	//used for cancel operation
 	stack<QImage> images;
 	int redMeans,greenMeans,blueMeans;
 	int tolerance,featherRadius;
-	Mat faceMask;
+	MatWrapper<uchar> faceMask;
 	//this mat is used for region extraction,ref:BaseOperation::regionExtraction
-	Mat regionMask;
-	Mat srcMat;
-	Mat resultMat;
-	Mat srcHSVMat;
+	MatWrapper<uchar> regionMask;
+	MatWrapper<Vec3b> srcMat;
+	MatWrapper<Vec3b> resultMat;
+	MatWrapper<Vec3f> srcHSVMat;
 	QImage srcImage,resultImage;
 	QString fileName;
 	setColorParametersDialog paraDialog;

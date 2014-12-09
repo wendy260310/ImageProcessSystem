@@ -116,7 +116,7 @@ void ImageProcessSystem::batchHighlightRemoval()
 		//srcMat.copyTo(resultMat);
 		//colorCorrection();
 		faceDetectingCombined();
-		imwrite(fileName.toStdString(),faceMask);
+		imwrite(fileName.toStdString(),faceMask.get());
 	}
 }
 //discard!!
@@ -195,17 +195,17 @@ void ImageProcessSystem::faceDetectingUsingColorModel()
 		return;
 	//here,only combined method triggers processStatus
 	processStatus&=(~FACE_DETECTION_DONE);
-	memset(faceMask.data,NOTFACE_PIXEL_VALUE,srcImage.width()*srcImage.height()*sizeof(uchar));
-	faceDetector::detectingFace(srcMat,faceMask,FACE_COLORMODEL,face);
+	memset(faceMask.get().data,NOTFACE_PIXEL_VALUE,srcImage.width()*srcImage.height()*sizeof(uchar));
+	faceDetector::detectingFace(srcMat.get(),faceMask.get(),FACE_COLORMODEL,face);
 	images.push(srcImage);
 #ifdef DEBUG
-	imshow("faceMask",faceMask);
+	imshow("faceMask",faceMask.get());
 #else
 	currentDisplayImageImproper=true;
 	updateToolBar();
 	Mat faceMaskThreeChannel;
-	cvtColor(faceMask,faceMaskThreeChannel,CV_GRAY2BGR);
-	QImage faceMaskImage(faceMask.cols,faceMask.rows,QImage::Format_RGB32);
+	cvtColor(faceMask.get(),faceMaskThreeChannel,CV_GRAY2BGR);
+	QImage faceMaskImage(faceMask->cols,faceMask->rows,QImage::Format_RGB32);
 	BasisOperation::mat2QImage(faceMaskThreeChannel,faceMaskImage);
 	ImageLabel->displayImage(faceMaskImage);
 #endif
@@ -217,11 +217,11 @@ void ImageProcessSystem::automaticFaceDetecting()
 	images.push(srcImage);
 	currentDisplayImageImproper=true;
 #ifdef DEBUG
-	imshow("faceMask",faceMask);
+	imshow("faceMask",faceMask.get());
 #else
 	Mat faceMaskThreeChannel;
-	cvtColor(faceMask,faceMaskThreeChannel,CV_GRAY2BGR);
-	QImage faceMaskImage(faceMask.cols,faceMask.rows,QImage::Format_RGB32);
+	cvtColor(faceMask.get(),faceMaskThreeChannel,CV_GRAY2BGR);
+	QImage faceMaskImage(faceMask->cols,faceMask->rows,QImage::Format_RGB32);
 	BasisOperation::mat2QImage(faceMaskThreeChannel,faceMaskImage);
 	ImageLabel->displayImage(faceMaskImage);
 #endif
@@ -274,8 +274,8 @@ void ImageProcessSystem::interactiveColorLevelTriggered()
 	connect(((InteractiveColorLevelWidget *)interactiveOptionWidget)->lightnessSlider.get(),SIGNAL(valueChanged(int)),this,SLOT(interactiveColorLevelParametersChanged(int)));
 	connect(((InteractiveColorLevelWidget *)interactiveOptionWidget)->saturationSlider.get(),SIGNAL(valueChanged(int)),this,SLOT(interactiveColorLevelParametersChanged(int)));
 	connect(((InteractiveColorLevelWidget *)interactiveOptionWidget)->contrastSlider.get(),SIGNAL(valueChanged(int)),this,SLOT(interactiveColorLevelParametersChanged(int)));
-	srcHSVMat=Mat(srcMat.rows,srcMat.cols,CV_32FC3);
-	ColorSpaceTransition::rgb2Hsv(srcMat,srcHSVMat);
+	srcHSVMat.get()=Mat(srcMat->rows,srcMat->cols,CV_32FC3);
+	ColorSpaceTransition::rgb2Hsv(srcMat.get(),srcHSVMat.get());
 	updateToolBar();
 	updateDisplayImage();
 }
@@ -343,30 +343,30 @@ void ImageProcessSystem::intercativeHighlightActionTriggered()
 }
 void ImageProcessSystem::interactiveHighlightFinishSignalEmit()
 {
-	memset(highlightMask.data,NOTHIGHLIGHT_PIXEL_VALUE,sizeof(uchar)*highlightMask.rows*highlightMask.cols);
-	BasisOperation::qimage2OneChannelMat(((HighLightLabel *)ImageLabel)->paintMask,INTERACTIVE_PIXEL_VALUE,highlightMask,HIGHLIGHT_PIXEL_VALUE);
+	memset(highlightMask.get().data,NOTHIGHLIGHT_PIXEL_VALUE,sizeof(uchar)*highlightMask->rows*highlightMask->cols);
+	BasisOperation::qimage2OneChannelMat(((HighLightLabel *)ImageLabel)->paintMask,INTERACTIVE_PIXEL_VALUE,highlightMask.get(),HIGHLIGHT_PIXEL_VALUE);
 	unsigned char mode=0;
 	if(((InteractiveHighlightWidget *)interactiveOptionWidget)->possionMethodIsChecked())
 	{
 		//detect face is time-consuming
-		face=Rect(1,1,srcMat.cols-1,srcMat.rows-1);
+		face=Rect(1,1,srcMat->cols-1,srcMat->rows-1);
 		mode=HIGHLIGHT_REMOVAL_POSSION_MATHOD;
 	}
 	else
 	{
 		faceDetectingCombined();
-		srcMat.copyTo(resultMat);
+		srcMat.get().copyTo(resultMat.get());
 		mode=HIGHLIGHT_REMOVAL_INPAINTING_MATHOD;
 	}
-	HighLightRemoval::removal(srcMat,resultMat,highlightMask,face,mode);
+	HighLightRemoval::removal(srcMat.get(),resultMat.get(),highlightMask.get(),face,mode);
 	updateMat();
 	updateToolBar();
 	updateDisplayImage();
 }
 void ImageProcessSystem::interactiveLocalEnhencementFinishSignalEmit()
 {
-	BasisOperation::qimage2OneChannelMat(((LocalEnhencementLabel *)ImageLabel)->paintMask,INTERACTIVE_PIXEL_VALUE,regionMask,PIXEL_SELECTED_VALUE);
-	blur(regionMask,regionMask,Size(featherRadius,featherRadius));
+	BasisOperation::qimage2OneChannelMat(((LocalEnhencementLabel *)ImageLabel)->paintMask,INTERACTIVE_PIXEL_VALUE,regionMask.get(),PIXEL_SELECTED_VALUE);
+	blur(regionMask.get(),regionMask.get(),Size(featherRadius,featherRadius));
 	double x=0.5,y;
 	if(((InteractiveLocalEnhencementWidget *)interactiveOptionWidget)->dodgeRadioButton->isChecked())
 	{
@@ -374,8 +374,8 @@ void ImageProcessSystem::interactiveLocalEnhencementFinishSignalEmit()
 	}
 	else
 		y=0.55;
-	srcMat.copyTo(resultMat);
-	BasisOperation::localEnhencementUsingMappingMethod(resultMat,&regionMask,x,y);
+	srcMat.get().copyTo(resultMat.get());
+	BasisOperation::localEnhencementUsingMappingMethod(resultMat.get(),&regionMask.get(),x,y);
 	updateMat();
 	updateToolBar();
 	updateDisplayImage();
@@ -415,7 +415,7 @@ void ImageProcessSystem::interactiveLacalEnhencementActionTriggered()
 	delete ImageLabel;
 	ImageLabel=new LocalEnhencementLabel(ui.centralWidget);
 	initImageLabel();
-	((LocalEnhencementLabel *)(ImageLabel))->setParameters(&srcImage,ui.pixelValueLabel,&regionMask,&srcMat,tolerance,featherRadius);
+	((LocalEnhencementLabel *)(ImageLabel))->setParameters(&srcImage,ui.pixelValueLabel,&regionMask.get(),&srcMat.get(),tolerance,featherRadius);
 	connect(ImageLabel,SIGNAL(interactiveLocalEnhencementFinished()),this,SLOT(interactiveLocalEnhencementFinishSignalEmit()));
 	interactiveOptionWidgetHasInit=true;
 	delete interactiveOptionWidget;
@@ -432,10 +432,10 @@ void ImageProcessSystem::faceDetectingCombined()
 		return;
 	if(!(processStatus&FACE_DETECTION_DONE))
 	{
-		memset(faceMask.data,NOTFACE_PIXEL_VALUE,srcImage.width()*srcImage.height()*sizeof(uchar));
-		faceDetector::detectingFace(srcMat,faceMask,FACE_COLORMODEL|FACE_USINGOPENCV|FACE_USING_CLUSTER,face);
-		dilate(faceMask,faceMask,Mat(),Point(-1,-1),5);
-		erode(faceMask,faceMask,Mat(),Point(-1,-1),5);
+		memset(faceMask.get().data,NOTFACE_PIXEL_VALUE,srcImage.width()*srcImage.height()*sizeof(uchar));
+		faceDetector::detectingFace(srcMat.get(),faceMask.get(),FACE_COLORMODEL|FACE_USINGOPENCV|FACE_USING_CLUSTER,face);
+		dilate(faceMask.get(),faceMask.get(),Mat(),Point(-1,-1),5);
+		erode(faceMask.get(),faceMask.get(),Mat(),Point(-1,-1),5);
 		processStatus|=FACE_DETECTION_DONE;
 	}
 }
@@ -557,30 +557,30 @@ void ImageProcessSystem::superPixelActionTriggered()
 	mxDestroyArray(xInMatlab);
 	mxDestroyArray(yInMatlab);
 	delete [] grayImageData;
-	int *position=new int[srcMat.rows*srcMat.cols];
-	memset(position,0,sizeof(int)*srcMat.rows*srcMat.cols);
+	int *position=new int[srcMat->rows*srcMat->cols];
+	memset(position,0,sizeof(int)*srcMat->rows*srcMat->cols);
 	int pixelNumber=0;
-	srcMat.copyTo(resultMat);
+	srcMat.get().copyTo(resultMat.get());
 	for(int i=0;i<faceImgHeight;++i)
 		for(int j=0;j<=symmetryAxisX;++j)
 		{
 			/*if(faceMask.at<uchar>(face.y+i,face.x+j)==FACE_PIXEL_VALUE)*/
-			if(faceMask.at<uchar>(face.y+i,face.x+j)==FACE_PIXEL_VALUE&&faceMask.at<uchar>(face.y+i,faceImgWidth-1-j+face.x)==FACE_PIXEL_VALUE&&regionMask.at<uchar>(face.y+i,faceImgWidth-1-j+face.x)==PIXEL_NOT_SELECTED_VALUE)
+			if(faceMask->at<uchar>(face.y+i,face.x+j)==FACE_PIXEL_VALUE&&faceMask->at<uchar>(face.y+i,faceImgWidth-1-j+face.x)==FACE_PIXEL_VALUE&&regionMask->at<uchar>(face.y+i,faceImgWidth-1-j+face.x)==PIXEL_NOT_SELECTED_VALUE)
 			{
-				resultMat.at<Vec3b>(face.y+i,face.x+j)=resultMat.at<Vec3b>(face.y+i,faceImgWidth-1-j+face.x);
+				resultMat->at<Vec3b>(face.y+i,face.x+j)=resultMat->at<Vec3b>(face.y+i,faceImgWidth-1-j+face.x);
 			}
 			else
-				if(regionMask.at<uchar>(face.y+i,faceImgWidth-1-j+face.x)==PIXEL_SELECTED_VALUE)
+				if(regionMask->at<uchar>(face.y+i,faceImgWidth-1-j+face.x)==PIXEL_SELECTED_VALUE)
 				{
-					regionMask.at<uchar>(face.y+i,faceImgWidth-1-j+face.x)=PIXEL_NOT_SELECTED_VALUE;
-					regionMask.at<uchar>(face.y+i,face.x+j)=PIXEL_SELECTED_VALUE;
-					position[(face.y+i)*srcMat.cols+face.x+j]=pixelNumber;
+					regionMask->at<uchar>(face.y+i,faceImgWidth-1-j+face.x)=PIXEL_NOT_SELECTED_VALUE;
+					regionMask->at<uchar>(face.y+i,face.x+j)=PIXEL_SELECTED_VALUE;
+					position[(face.y+i)*srcMat->cols+face.x+j]=pixelNumber;
 					pixelNumber++;
 				}
 		}
-	BasisOperation::poissonEditing(resultMat,resultMat,regionMask,position,pixelNumber,0,0.0,255.0);
-	BasisOperation::poissonEditing(resultMat,resultMat,regionMask,position,pixelNumber,1,0.0,255.0);
-	BasisOperation::poissonEditing(resultMat,resultMat,regionMask,position,pixelNumber,2,0.0,255.0);
+	//BasisOperation::poissonEditing(resultMat->get,resultMat,regionMask,position,pixelNumber,0,0.0,255.0);
+	//BasisOperation::poissonEditing(resultMat,resultMat,regionMask,position,pixelNumber,1,0.0,255.0);
+	//BasisOperation::poissonEditing(resultMat,resultMat,regionMask,position,pixelNumber,2,0.0,255.0);
 	//super pixel
 //	QImage faceImage=srcImage.copy(face.x,face.y,faceImgWidth,faceImgHeight);
 //	QImage halfFaceImage=srcImage.copy(face.x,face.y,symmetryAxisX+1,faceImgHeight);
@@ -745,7 +745,7 @@ void ImageProcessSystem::saveFile()
 		QString saveFileName=QFileDialog::getSaveFileName(this,"Save File",QDir::currentPath(),"Images (*.jpg *.gif *.bmp *.jpeg *.png *.tiff)");
 		if(saveFileName.isEmpty())
 			return;
-		imwrite(saveFileName.toStdString(),srcMat);
+		imwrite(saveFileName.toStdString(),srcMat.get());
 }
 void ImageProcessSystem::updateToolBar()
 {
@@ -867,8 +867,8 @@ void ImageProcessSystem::interactiveSwitchActionTriggered()
 	{
 		if(((InteractiveFaceLabel *)ImageLabel)->getFaceStatus())
 		{
-			memset(faceMask.data,NOTFACE_PIXEL_VALUE,srcImage.width()*srcImage.height()*sizeof(uchar));
-			faceDetector::detectingFace(srcMat,faceMask,FACE_COLORMODEL,face);
+			memset(faceMask.get().data,NOTFACE_PIXEL_VALUE,srcImage.width()*srcImage.height()*sizeof(uchar));
+			faceDetector::detectingFace(srcMat.get(),faceMask.get(),FACE_COLORMODEL,face);
 			processStatus|=FACE_DETECTION_DONE;
 		}
 	}
@@ -889,9 +889,9 @@ void ImageProcessSystem::interactiveLocalEnhencementParametersChanged(int value)
 	InteractiveLocalEnhencementWidget *widget=(InteractiveLocalEnhencementWidget *)interactiveOptionWidget;
 	widget->updateShowNumberLabel();
 	double x=0.5,redY=widget->redEnhencementSlider->value()*0.01;//,greenY=widget->greenEnhencementSlider->value()*0.01,blueY=widget->blueEnhencementSlider->value()*0.01;
-	srcMat.copyTo(resultMat);
+	srcMat.get().copyTo(resultMat.get());
 	//BasisOperation::colorLevel(srcMat,resultMat,0,255,128-(widget->redEnhencementSlider->value()*0.01-0.5)*255);
-	blur(regionMask,regionMask,Size(21,21));
+	blur(regionMask.get(),regionMask.get(),Size(21,21));
 	/*int w=srcMat.cols,h=srcMat.rows;
 	double weight,redChannelValue,greenChannelValue,blueChannelValue;
 	for(int i=0;i<w;++i)
@@ -905,24 +905,24 @@ void ImageProcessSystem::interactiveLocalEnhencementParametersChanged(int value)
 			resultMat.at<Vec3b>(j,i)[1]=(unsigned char)greenChannelValue;
 			resultMat.at<Vec3b>(j,i)[0]=(unsigned char)blueChannelValue;
 		}*/
-	BasisOperation::localEnhencementUsingMappingMethod(resultMat,&regionMask,x,redY);
+	BasisOperation::localEnhencementUsingMappingMethod(resultMat.get(),&regionMask.get(),x,redY);
 	//BasisOperation::localEnhencementUsingMappingMethod(resultMat,&regionMask,x,redY,1);
 	//BasisOperation::localEnhencementUsingMappingMethod(resultMat,&regionMask,x,redY,0);
 	interactiveHasProduceResult=true;
-	BasisOperation::mat2QImage(resultMat,resultImage);
+	BasisOperation::mat2QImage(resultMat.get(),resultImage);
 	ImageLabel->displayImage(resultImage);
 }
 void ImageProcessSystem::interactiveColorLevelParametersChanged(int value)
 {
 	InteractiveColorLevelWidget *widget=(InteractiveColorLevelWidget *)interactiveOptionWidget;
 	widget->updateShowCurrentNumberLabel();
-	srcMat.copyTo(resultMat);
+	srcMat.get().copyTo(resultMat.get());
 	if(widget->saturationSlider->value()!=50||widget->lightnessSlider->value()!=50)
 	{
 		float diff;
-		Mat hsvMat(srcMat.rows,srcMat.cols,CV_32FC3);
+		Mat hsvMat(srcMat->rows,srcMat->cols,CV_32FC3);
 		//ColorSpaceTransition::rgb2Hsv(resultMat,hsvMat);
-		srcHSVMat.copyTo(hsvMat);
+		srcHSVMat.get().copyTo(hsvMat);
 		if(widget->saturationSlider->value()!=50)
 		{
 			diff=widget->saturationSlider->value()*0.01-0.5;
@@ -934,16 +934,16 @@ void ImageProcessSystem::interactiveColorLevelParametersChanged(int value)
 			BasisOperation::modifySaturationOrLightness(hsvMat,0,diff);
 		}
 		interactiveHasProduceResult=true;
-		ColorSpaceTransition::hsv2Rgb(hsvMat,resultMat);
+		ColorSpaceTransition::hsv2Rgb(hsvMat,resultMat.get());
 	}
 	if(widget->redSlider->value()!=50||widget->contrastSlider->value()!=50)
 	{
 		interactiveHasProduceResult=true;
 		unsigned char mid=(unsigned char)(widget->redSlider->value()*2.55);
 		uchar diff=abs(widget->contrastSlider->value()-50);
-		BasisOperation::colorLevel(resultMat,resultMat,0+diff,255-diff,mid);
+		BasisOperation::colorLevel(resultMat.get(),resultMat.get(),0+diff,255-diff,mid);
 	}
-	BasisOperation::mat2QImage(resultMat,resultImage);
+	BasisOperation::mat2QImage(resultMat.get(),resultImage);
 	ImageLabel->displayImage(resultImage);
 }
 void ImageProcessSystem::interativeColorBalanceParametersChanged(int value)
@@ -953,9 +953,9 @@ void ImageProcessSystem::interativeColorBalanceParametersChanged(int value)
 	double green=widget->greenSlider->value()*0.01;
 	double blue=widget->blueSlider->value()*0.01;
 	widget->updateShowCurrentNumberLabel();
-	BasisOperation::ColorBalance(srcMat,resultMat,red,green,blue);
+	BasisOperation::ColorBalance(srcMat.get(),resultMat.get(),red,green,blue);
 	interactiveHasProduceResult=true;
-	BasisOperation::mat2QImage(resultMat,resultImage);
+	BasisOperation::mat2QImage(resultMat.get(),resultImage);
 	ImageLabel->setParameters(&resultImage,ui.pixelValueLabel);
 	ImageLabel->displayImage(resultImage);
 }
@@ -972,7 +972,7 @@ void ImageProcessSystem::interactiveColorCorrectionParametersChanged(int value)
 	if(colorCorrection())
 	{
 		interactiveHasProduceResult=true;
-		BasisOperation::mat2QImage(resultMat,resultImage);
+		BasisOperation::mat2QImage(resultMat.get(),resultImage);
 		ImageLabel->setParameters(&resultImage,ui.pixelValueLabel);
 		ImageLabel->displayImage(resultImage);
 	}
@@ -985,7 +985,7 @@ void ImageProcessSystem::cancelOperation()
 {
 	srcImage=images.top();
 	currentDisplayImageImproper=false;
-	BasisOperation::qimage2Mat(srcImage,srcMat);
+	BasisOperation::qimage2Mat(srcImage,srcMat.get());
 	images.pop();
 	resetStatus();
 	updateToolBar();
@@ -993,7 +993,7 @@ void ImageProcessSystem::cancelOperation()
 }
 void ImageProcessSystem::sharpEffect()
 {
-	BasisOperation::sharpEffect(srcMat,resultMat);
+	BasisOperation::sharpEffect(srcMat.get(),resultMat.get());
 	updateMat();
 	updateToolBar();
 	updateDisplayImage();
@@ -1001,12 +1001,12 @@ void ImageProcessSystem::sharpEffect()
 void ImageProcessSystem::automaticHighlightRemoval()
 {
 	highlightDetection();
-	srcMat.copyTo(resultMat);
-	HighLightRemoval::removal(srcMat,resultMat,highlightMask,face,HIGHLIGHT_REMOVAL_POSSION_MATHOD);
+	srcMat.get().copyTo(resultMat.get());
+	HighLightRemoval::removal(srcMat.get(),resultMat.get(),highlightMask.get(),face,HIGHLIGHT_REMOVAL_POSSION_MATHOD);
 	updateMat();
 	updateToolBar();
 #ifdef DEBUG
-	imshow("result",resultMat);
+	imshow("result",resultMat.get());
 #else
 	updateDisplayImage();
 #endif
@@ -1017,11 +1017,11 @@ void ImageProcessSystem::automaticHighlightDetecting()
 	images.push(srcImage);
 	currentDisplayImageImproper=true;
 #ifdef DEBUG
-	imshow("highlight",highlightMask);
+	imshow("highlight",highlightMask.get());
 #else
 	Mat highlightMaskThreeChannel;
-	cvtColor(highlightMask,highlightMaskThreeChannel,CV_GRAY2BGR);
-	QImage highlightMaskImage(highlightMask.cols,highlightMask.rows,QImage::Format_RGB32);
+	cvtColor(highlightMask.get(),highlightMaskThreeChannel,CV_GRAY2BGR);
+	QImage highlightMaskImage(highlightMask->cols,highlightMask->rows,QImage::Format_RGB32);
 	BasisOperation::mat2QImage(highlightMaskThreeChannel,highlightMaskImage);
 	ImageLabel->displayImage(highlightMaskImage);
 #endif
@@ -1032,8 +1032,8 @@ void ImageProcessSystem::highlightDetection()
 	if(!(processStatus&HIGHLIGHT_DETECTION_DONE))
 	{
 		faceDetectingCombined();
-		memset(highlightMask.data,NOTHIGHLIGHT_PIXEL_VALUE,highlightMask.cols*highlightMask.rows*sizeof(uchar));
-		HighLightDetection::highlightDetection(highlightMask,srcMat,faceMask,HIGHLIGHT_VALUE_SATURATION_METHOD,face);
+		memset(highlightMask.get().data,NOTHIGHLIGHT_PIXEL_VALUE,highlightMask->cols*highlightMask->rows*sizeof(uchar));
+		HighLightDetection::highlightDetection(highlightMask.get(),srcMat.get(),faceMask.get(),HIGHLIGHT_VALUE_SATURATION_METHOD,face);
 		//dilate(highlightMask,highlightMask,Mat(),Point(-1,-1),10);
 		//erode(highlightMask,highlightMask,Mat(),Point(-1,-1),10);
 		processStatus|=HIGHLIGHT_DETECTION_DONE;
@@ -1042,16 +1042,14 @@ void ImageProcessSystem::highlightDetection()
 //when loading a new image
 void ImageProcessSystem::initMat()
 {
-	MatWrapper<Vec3b> m(srcImage.height(),srcImage.width(),CV_8UC1);
-	//m->at>(0,0)[2]=0;
-	faceMask=Mat::zeros(srcImage.height(),srcImage.width(),CV_8UC1);
-	highlightMask=Mat::zeros(srcImage.height(),srcImage.width(),CV_8UC1);
-	regionMask=Mat::zeros(srcImage.height(),srcImage.width(),CV_8UC1);
-	srcMat=Mat(srcImage.height(),srcImage.width(),CV_8UC3);
-	resultMat=Mat(srcImage.height(),srcImage.width(),CV_8UC3);
+	faceMask.get()=Mat::zeros(srcImage.height(),srcImage.width(),CV_8UC1);
+	highlightMask.get()=Mat::zeros(srcImage.height(),srcImage.width(),CV_8UC1);
+	regionMask.get()=Mat::zeros(srcImage.height(),srcImage.width(),CV_8UC1);
+	srcMat.get()=Mat(srcImage.height(),srcImage.width(),CV_8UC3);
+	resultMat.get()=Mat(srcImage.height(),srcImage.width(),CV_8UC3);
 	resultImage=QImage(srcImage.width(),srcImage.height(),QImage::Format_RGB32);
-	BasisOperation::qimage2Mat(srcImage,srcMat);
-	face=Rect(0,0,srcMat.cols,srcMat.rows);
+	BasisOperation::qimage2Mat(srcImage,srcMat.get());
+	face=Rect(0,0,srcMat->cols,srcMat->rows);
 }
 void ImageProcessSystem::updateDisplayImage()
 {
@@ -1061,19 +1059,19 @@ void ImageProcessSystem::updateDisplayImage()
 void ImageProcessSystem::updateMat()
 {
 	images.push(srcImage);
-	resultMat.copyTo(srcMat);
+	resultMat.get().copyTo(srcMat.get());
 	processStatus=0;
-	BasisOperation::mat2QImage(srcMat,srcImage);
+	BasisOperation::mat2QImage(srcMat.get(),srcImage);
 }
 bool ImageProcessSystem::colorCorrection()
 {
 	faceDetectingCombined();
-	if(!BasisOperation::faceNeedColorCorrection(srcMat,faceMask,face))
+	if(!BasisOperation::faceNeedColorCorrection(srcMat.get(),faceMask.get(),face))
 	{
 		QMessageBox::information(this,"Information","this picture is ok!");
 		return false;
 	}
-	ColorCorrection b(srcMat,faceMask,resultMat,blueMeans,0),g(srcMat,faceMask,resultMat,greenMeans,1),r(srcMat,faceMask,resultMat,redMeans,2);
+	ColorCorrection b(srcMat.get(),faceMask.get(),resultMat.get(),blueMeans,0),g(srcMat.get(),faceMask.get(),resultMat.get(),greenMeans,1),r(srcMat.get(),faceMask.get(),resultMat.get(),redMeans,2);
 	b.automaticColorCorrection();
 	g.automaticColorCorrection();
 	r.automaticColorCorrection();
@@ -1081,7 +1079,7 @@ bool ImageProcessSystem::colorCorrection()
 }
 void ImageProcessSystem::automaticLocalEnhencement()
 {
-	BasisOperation::colorLevel(srcMat,resultMat,0,255,2);
+	BasisOperation::colorLevel(srcMat.get(),resultMat.get(),0,255,2);
 	updateMat();
 	updateToolBar();
 	updateDisplayImage();
@@ -1093,7 +1091,7 @@ void ImageProcessSystem::automaticColorCorrection()
 		updateMat();
 		updateToolBar();
 #ifdef DEBUG
-		imshow("result",resultMat);
+		imshow("result",resultMat.get());
 #else
 		updateDisplayImage();
 #endif
