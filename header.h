@@ -61,10 +61,10 @@ private:
 #include <queue>
 using namespace cv;
 using namespace std;
-template<typename T> class MatWrapper
+template<typename U> class MatWrapper
 {
 public:
-	typedef T STEP;
+	typedef U STEP;
 	MatWrapper()
 	{
 
@@ -77,14 +77,14 @@ public:
 	{
 		return mat;
 	}
-	MatWrapper<T> & operator=(MatWrapper<T> &m)
+	MatWrapper<U> & operator=(MatWrapper<U> &m)
 	{
 		if(&m!=this)
 		{
 			mat=m.get();
 		}
 	}
-	MatWrapper(MatWrapper<T> &w):mat(w.get())
+	MatWrapper(MatWrapper<U> &w):mat(w.get())
 	{
 
 	}
@@ -97,5 +97,5 @@ private:
 };
 //using namespace stdext;
 typedef Eigen::SparseMatrix<double> SpMat;
-typedef Eigen::Triplet<double> T;
+typedef Eigen::Triplet<double> Tri;
 #endif

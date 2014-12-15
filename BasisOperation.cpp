@@ -688,7 +688,7 @@ void BasisOperation::poissonEditing(Mat &srcMat,Mat &resultMat,Mat &regionMask,i
 	A.setZero();
 	x.setZero();
 	b.setZero();
-	vector<T> tripleList;
+	vector<Tri> tripleList;
 	int count=0;
 	int w=srcMat.cols,h=srcMat.rows;
 	for(int i=0;i<h;++i)
@@ -697,11 +697,11 @@ void BasisOperation::poissonEditing(Mat &srcMat,Mat &resultMat,Mat &regionMask,i
 			if(regionMask.at<uchar>(i,j)==PIXEL_SELECTED_VALUE)
 			{
 				//please pay attention to the region boundary
-				tripleList.push_back(T(count,count,4));
+				tripleList.push_back(Tri(count,count,4));
 				//up
 				if(i!=0&&regionMask.at<uchar>(i-1,j)==PIXEL_SELECTED_VALUE)
 				{
-					tripleList.push_back(T(count,position[(i-1)*w+j],-1));
+					tripleList.push_back(Tri(count,position[(i-1)*w+j],-1));
 					b(count)+=(double)srcMat.at<Vec3b>(i,j)[channel]-(double)srcMat.at<Vec3b>(i-1,j)[channel];
 				}
 				else
@@ -709,7 +709,7 @@ void BasisOperation::poissonEditing(Mat &srcMat,Mat &resultMat,Mat &regionMask,i
 				//down
 				if(i!=(h-1)&&regionMask.at<uchar>(i+1,j)==PIXEL_SELECTED_VALUE)
 				{
-					tripleList.push_back(T(count,position[(i+1)*w+j],-1));
+					tripleList.push_back(Tri(count,position[(i+1)*w+j],-1));
 					b(count)+=(double)srcMat.at<Vec3b>(i,j)[channel]-(double)srcMat.at<Vec3b>(i+1,j)[channel];
 				}
 				else
@@ -717,7 +717,7 @@ void BasisOperation::poissonEditing(Mat &srcMat,Mat &resultMat,Mat &regionMask,i
 				//left
 				if(j!=0&&regionMask.at<uchar>(i,j-1)==PIXEL_SELECTED_VALUE)
 				{
-					tripleList.push_back(T(count,position[i*w+j-1],-1));
+					tripleList.push_back(Tri(count,position[i*w+j-1],-1));
 					b(count)+=(double)srcMat.at<Vec3b>(i,j)[channel]-(double)srcMat.at<Vec3b>(i,j-1)[channel];
 				}
 					
@@ -726,7 +726,7 @@ void BasisOperation::poissonEditing(Mat &srcMat,Mat &resultMat,Mat &regionMask,i
 				//right
 				if(j!=(w-1)&&regionMask.at<uchar>(i,j+1)==PIXEL_SELECTED_VALUE)
 				{
-					tripleList.push_back(T(count,position[i*w+j+1],-1));
+					tripleList.push_back(Tri(count,position[i*w+j+1],-1));
 					b(count)+=(double)srcMat.at<Vec3b>(i,j)[channel]-(double)srcMat.at<Vec3b>(i,j+1)[channel];
 				}
 				else
@@ -759,7 +759,7 @@ void BasisOperation::poissonEditing(Mat &srcMat,Mat &resultMat,Mat &regionMask,i
 	A.setZero();
 	x.setZero();
 	b.setZero();
-	vector<T> tripleList;
+	vector<Tri> tripleList;
 	int count=0;
 	int w=srcMat.cols,h=srcMat.rows;
 	for(int i=0;i<h;++i)
@@ -767,24 +767,24 @@ void BasisOperation::poissonEditing(Mat &srcMat,Mat &resultMat,Mat &regionMask,i
 		{
 			if(regionMask.at<uchar>(i,j)==PIXEL_SELECTED_VALUE)
 			{
-				tripleList.push_back(T(count,count,4));
+				tripleList.push_back(Tri(count,count,4));
 				if(i!=0&&regionMask.at<uchar>(i-1,j)==PIXEL_SELECTED_VALUE)
 				{
-					tripleList.push_back(T(count,position[(i-1)*w+j],-1));
+					tripleList.push_back(Tri(count,position[(i-1)*w+j],-1));
 				}
 				else
 					b(count)+=srcMat.at<Vec3b>(i-1,j)[channel];
 				//down
 				if(i!=(h-1)&&regionMask.at<uchar>(i+1,j)==PIXEL_SELECTED_VALUE)
 				{
-					tripleList.push_back(T(count,position[(i+1)*w+j],-1));
+					tripleList.push_back(Tri(count,position[(i+1)*w+j],-1));
 				}
 				else
 					b(count)+=srcMat.at<Vec3b>(i+1,j)[channel];
 				//left
 				if(j!=0&&regionMask.at<uchar>(i,j-1)==PIXEL_SELECTED_VALUE)
 				{
-					tripleList.push_back(T(count,position[i*w+j-1],-1));
+					tripleList.push_back(Tri(count,position[i*w+j-1],-1));
 				}
 
 				else
@@ -792,7 +792,7 @@ void BasisOperation::poissonEditing(Mat &srcMat,Mat &resultMat,Mat &regionMask,i
 				//right
 				if(j!=(w-1)&&regionMask.at<uchar>(i,j+1)==PIXEL_SELECTED_VALUE)
 				{
-					tripleList.push_back(T(count,position[i*w+j+1],-1));
+					tripleList.push_back(Tri(count,position[i*w+j+1],-1));
 				}
 				else
 					b(count)+=srcMat.at<Vec3b>(i,j+1)[channel];

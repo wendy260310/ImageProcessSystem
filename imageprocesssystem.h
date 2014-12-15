@@ -6,6 +6,8 @@
 #include "setColorParametersDialog.h"
 #include "ui_imageprocesssystem.h"
 #include "engine.h"
+#include "ImageTriangle.h"
+#include "triangle/triangle.h"
 class LocalEnhencementDialog;
 class MatlabEngineHolder
 {
@@ -72,6 +74,7 @@ public slots:
 	void superPixelActionTriggered();
 private:
 	void inline resetStatus();
+	void renderTriangle(struct triangulateio &out,QImage &img);
 	bool colorCorrection();
 	bool loadImage();
 	void connnecting();

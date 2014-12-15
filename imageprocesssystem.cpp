@@ -17,6 +17,8 @@
 #include "InteractiveLocalEnhencementWidget.h"
 #include "InteractiveColorCorrectionWidget.h"
 #include "SLIC.h"
+#include "Poisson.h"
+
 Engine * MatlabEngineHolder::eng=NULL;
 ImageProcessSystem::ImageProcessSystem(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
@@ -498,6 +500,20 @@ void ImageProcessSystem::listWidgetClicked(QListWidgetItem *item)
 	initMat();
 	initImageLabel();
 }
+void ImageProcessSystem::renderTriangle(struct triangulateio &out,QImage &img)
+{
+	QPainter p(&img);
+	double startX,startY,endX,endY;
+	for(int i=0;i<out.numberofedges;++i)
+	{
+		startX=out.pointlist[2*out.edgelist[2*i]];
+		startY=out.pointlist[2*out.edgelist[2*i]+1];
+		endX=out.pointlist[2*out.edgelist[2*i+1]];
+		endY=out.pointlist[2*out.edgelist[2*i+1]+1];
+		p.drawLine(startX,startY,endX,endY);
+	}
+	p.end();
+}
 void ImageProcessSystem::openFile()
 {
 	fileName=QFileDialog::getOpenFileName(this,"Open File",QDir::currentPath(),"Images (*.bmp *.gif *.jpg *.jpeg *.png *.tiff)");
@@ -531,53 +547,79 @@ void ImageProcessSystem::superPixelActionTriggered()
 	Engine *ep=MatlabEngineHolder::getEngine();
 	mxArray *imgDataMatlab=mxCreateDoubleMatrix(faceImgWidth,faceImgHeight,mxREAL);
 	memcpy(mxGetPr(imgDataMatlab),grayImageData,faceImgWidth*faceImgHeight*sizeof(double));
-	mxArray *xInMatlab,*yInMatlab;
+	mxArray *xInMatlab,*yInMatlab,*keyVector;
 	engPutVariable(ep,"img",imgDataMatlab);
 	engEvalString(ep,"img=img';");
 	engEvalString(ep,"cd bin/symmetry;");
-	engEvalString(ep,"[X,Y]=symmetry(img,'mirror');");
-	xInMatlab=engGetVariable(ep,"X");
-	yInMatlab=engGetVariable(ep,"Y");
-	double *xData=mxGetPr(xInMatlab);
-	double *yData=mxGetPr(yInMatlab);
-	int n=mxGetN(yInMatlab);
-	if(n==0)
-		return;
-	// we assume the symmetry axis is vertical
-	int symmetryAxisX;
-	double sum=0;
-	for(int i=0;i<n;++i)
-		sum+=xData[i];
-	symmetryAxisX=(int)(sum/n);
-	faceImgWidth=2*(symmetryAxisX+1);
-	//here faceImageWidth may exceeds the boundary,we treat it as error
-	if(faceImgWidth>=srcImage.width()-face.x)
-		return ;
-	mxDestroyArray(imgDataMatlab);
-	mxDestroyArray(xInMatlab);
-	mxDestroyArray(yInMatlab);
-	delete [] grayImageData;
-	int *position=new int[srcMat->rows*srcMat->cols];
-	memset(position,0,sizeof(int)*srcMat->rows*srcMat->cols);
-	int pixelNumber=0;
-	srcMat.get().copyTo(resultMat.get());
-	for(int i=0;i<faceImgHeight;++i)
-		for(int j=0;j<=symmetryAxisX;++j)
-		{
-			/*if(faceMask.at<uchar>(face.y+i,face.x+j)==FACE_PIXEL_VALUE)*/
-			if(faceMask->at<uchar>(face.y+i,face.x+j)==FACE_PIXEL_VALUE&&faceMask->at<uchar>(face.y+i,faceImgWidth-1-j+face.x)==FACE_PIXEL_VALUE&&regionMask->at<uchar>(face.y+i,faceImgWidth-1-j+face.x)==PIXEL_NOT_SELECTED_VALUE)
-			{
-				resultMat->at<Vec3b>(face.y+i,face.x+j)=resultMat->at<Vec3b>(face.y+i,faceImgWidth-1-j+face.x);
-			}
-			else
-				if(regionMask->at<uchar>(face.y+i,faceImgWidth-1-j+face.x)==PIXEL_SELECTED_VALUE)
-				{
-					regionMask->at<uchar>(face.y+i,faceImgWidth-1-j+face.x)=PIXEL_NOT_SELECTED_VALUE;
-					regionMask->at<uchar>(face.y+i,face.x+j)=PIXEL_SELECTED_VALUE;
-					position[(face.y+i)*srcMat->cols+face.x+j]=pixelNumber;
-					pixelNumber++;
-				}
-		}
+	engEvalString(ep,"[keyVector,X,Y]=symmetry(img,'mirror');");
+	//xInMatlab=engGetVariable(ep,"X");
+	//yInMatlab=engGetVariable(ep,"Y");
+	keyVector=engGetVariable(ep,"keyVector");
+	int keyVecotrM=mxGetM(keyVector),keyVectorN=mxGetN(keyVector);
+	double *keyVectorData=mxGetPr(keyVector);
+	vector<REAL> pointX,pointY;
+	pointX.push_back(face.x);
+	pointX.push_back(face.x+faceImgWidth);
+	pointX.push_back(face.x+faceImgWidth);
+	pointX.push_back(face.x);
+	pointY.push_back(face.y);
+	pointY.push_back(face.y);
+	pointY.push_back(face.y+faceImgHeight);
+	pointY.push_back(face.y+faceImgHeight);
+	for(int i=1;i<=keyVecotrM;++i)
+	{
+		pointX.push_back(keyVectorData[keyVectorN*i]+face.x);
+		pointY.push_back(keyVectorData[keyVectorN*i+1]+face.y);
+	}
+	resultImage=srcImage.copy(0,0,srcImage.width(),srcImage.height());
+	struct triangulateio io;
+	ImageTriangle::bulitTri(pointX,pointY,io);
+	renderTriangle(io,resultImage);
+	ImageLabel->displayImage(resultImage);
+	//double *xData=mxGetPr(xInMatlab);
+	//double *yData=mxGetPr(yInMatlab);
+	//int n=mxGetN(yInMatlab);
+	//if(n==0)
+	//	return;
+	//// we assume the symmetry axis is vertical
+	//int symmetryAxisX;
+	//double sum=0;
+	//for(int i=0;i<n;++i)
+	//	sum+=xData[i];
+	//symmetryAxisX=(int)(sum/n);
+	//faceImgWidth=2*(symmetryAxisX+1);
+	////here faceImageWidth may exceeds the boundary,we treat it as error
+	//if(faceImgWidth>=srcImage.width()-face.x)
+	//	return ;
+	//mxDestroyArray(imgDataMatlab);
+	//mxDestroyArray(xInMatlab);
+	//mxDestroyArray(yInMatlab);
+	//mxDestroyArray(keyVector);
+	//delete [] grayImageData;
+	////
+	//vector<int> position(srcMat->rows*srcMat->cols,0);
+	//int pixelNumber=0;
+	//srcMat.get().copyTo(resultMat.get());
+	//for(int i=0;i<faceImgHeight;++i)
+	//	for(int j=0;j<=symmetryAxisX;++j)
+	//	{
+	//		/*if(faceMask.at<uchar>(face.y+i,face.x+j)==FACE_PIXEL_VALUE)*/
+	//		if(faceMask->at<uchar>(face.y+i,face.x+j)==FACE_PIXEL_VALUE&&faceMask->at<uchar>(face.y+i,faceImgWidth-1-j+face.x)==FACE_PIXEL_VALUE&&regionMask->at<uchar>(face.y+i,faceImgWidth-1-j+face.x)==PIXEL_NOT_SELECTED_VALUE)
+	//		{
+	//			resultMat->at<Vec3b>(face.y+i,face.x+j)=resultMat->at<Vec3b>(face.y+i,faceImgWidth-1-j+face.x);
+	//		}
+	//		else
+	//			if(regionMask->at<uchar>(face.y+i,faceImgWidth-1-j+face.x)==PIXEL_SELECTED_VALUE)
+	//			{
+	//				regionMask->at<uchar>(face.y+i,faceImgWidth-1-j+face.x)=PIXEL_NOT_SELECTED_VALUE;
+	//				regionMask->at<uchar>(face.y+i,face.x+j)=PIXEL_SELECTED_VALUE;
+	//				position[(face.y+i)*srcMat->cols+face.x+j]=pixelNumber;
+	//				pixelNumber++;
+	//			}
+	//	}
+	//Poisson::poissonEditing(srcMat,resultMat,regionMask,position,pixelNumber,FIRST,0.0,255.0);
+	//Poisson::poissonEditing(srcMat,resultMat,regionMask,position,pixelNumber,SECOND,0.0,255.0);
+	//Poisson::poissonEditing(srcMat,resultMat,regionMask,position,pixelNumber,THIRD,0.0,255.0);
 	//BasisOperation::poissonEditing(resultMat->get,resultMat,regionMask,position,pixelNumber,0,0.0,255.0);
 	//BasisOperation::poissonEditing(resultMat,resultMat,regionMask,position,pixelNumber,1,0.0,255.0);
 	//BasisOperation::poissonEditing(resultMat,resultMat,regionMask,position,pixelNumber,2,0.0,255.0);
@@ -735,9 +777,9 @@ void ImageProcessSystem::superPixelActionTriggered()
 #ifdef DISPLAY_SUPERPIXEL_AND_SYMMETRY
 	ImageLabel->displayImage(resultImage);
 #else
-	updateMat();
-	updateToolBar();
-	updateDisplayImage();
+	//updateMat();
+	//updateToolBar();
+	//updateDisplayImage();
 #endif
 }
 void ImageProcessSystem::saveFile()

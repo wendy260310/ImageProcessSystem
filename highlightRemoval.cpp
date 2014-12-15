@@ -299,7 +299,7 @@ void PossionMethodThread::run()
 	int w=face.width,h=face.height,x=face.x,y=face.y;
 	SpMat A(pixelNumber,pixelNumber);
 	Eigen::VectorXd b(pixelNumber),X(pixelNumber);
-	vector<T> tripleList;
+	vector<Tri> tripleList;
 	A.setZero();
 	b.setZero();
 	X.setZero();
@@ -310,7 +310,7 @@ void PossionMethodThread::run()
 		{
 			if(highlightMask.at<uchar>(j,i)==HIGHLIGHT_PIXEL_VALUE)
 			{
-				tripleList.push_back(T(count,count,4));
+				tripleList.push_back(Tri(count,count,4));
 #ifdef POSSION_HSV
 				gradientNormal=sqrt(((double)srcMat.at<Vec3f>(j,i)[channel]-(double)srcMat.at<Vec3f>(j-1,i)[channel])*((double)srcMat.at<Vec3f>(j,i)[channel]-(double)srcMat.at<Vec3f>(j-1,i)[channel])+((double)srcMat.at<Vec3f>(j,i)[channel]-(double)srcMat.at<Vec3f>(j,i-1)[channel])*((double)srcMat.at<Vec3f>(j,i)[channel]-(double)srcMat.at<Vec3f>(j,i-1)[channel]));
 #else
@@ -326,7 +326,7 @@ void PossionMethodThread::run()
 						b(count)+=possionAttenuationRatio*pow(gradientNormal,-0.05)*((double)srcMat.at<Vec3b>(j,i)[channel]*4-(double)srcMat.at<Vec3b>(j-1,i)[channel]-(double)srcMat.at<Vec3b>(j+1,i)[channel]-(double)srcMat.at<Vec3b>(j,i-1)[channel]-(double)srcMat.at<Vec3b>(j,i+1)[channel]);
 #endif
 					}
-					tripleList.push_back(T(count,position[(j-1)*srcMat.cols+i]-1,-1));
+					tripleList.push_back(Tri(count,position[(j-1)*srcMat.cols+i]-1,-1));
 				}
 				else
 #ifdef POSSION_HSV
@@ -344,7 +344,7 @@ void PossionMethodThread::run()
 						b(count)+=possionAttenuationRatio*pow(gradientNormal,-0.05)*((double)srcMat.at<Vec3b>(j,i)[channel]*4-(double)srcMat.at<Vec3b>(j-1,i)[channel]-(double)srcMat.at<Vec3b>(j+1,i)[channel]-(double)srcMat.at<Vec3b>(j,i-1)[channel]-(double)srcMat.at<Vec3b>(j,i+1)[channel]);
 #endif
 					}
-					tripleList.push_back(T(count,position[(j+1)*srcMat.cols+i]-1,-1));
+					tripleList.push_back(Tri(count,position[(j+1)*srcMat.cols+i]-1,-1));
 				}
 				else
 #ifdef POSSION_HSV
@@ -362,7 +362,7 @@ void PossionMethodThread::run()
 						b(count)+=possionAttenuationRatio*pow(gradientNormal,-0.05)*((double)srcMat.at<Vec3b>(j,i)[channel]*4-(double)srcMat.at<Vec3b>(j-1,i)[channel]-(double)srcMat.at<Vec3b>(j+1,i)[channel]-(double)srcMat.at<Vec3b>(j,i-1)[channel]-(double)srcMat.at<Vec3b>(j,i+1)[channel]);
 #endif
 					}
-					tripleList.push_back(T(count,position[j*srcMat.cols+i-1]-1,-1));
+					tripleList.push_back(Tri(count,position[j*srcMat.cols+i-1]-1,-1));
 				}
 				else
 #ifdef POSSION_HSV
@@ -372,7 +372,7 @@ void PossionMethodThread::run()
 #endif
 				if(i!=(w+x-1)&&highlightMask.at<uchar>(j,i+1)==HIGHLIGHT_PIXEL_VALUE)
 				{
-					tripleList.push_back(T(count,position[j*srcMat.cols+i+1]-1,-1));
+					tripleList.push_back(Tri(count,position[j*srcMat.cols+i+1]-1,-1));
 					if(fabs(gradientNormal)>0.001)
 					{
 #ifdef POSSION_HSV

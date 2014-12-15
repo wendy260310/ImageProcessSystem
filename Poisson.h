@@ -5,52 +5,52 @@ enum Channle{FIRST=0,SECOND=1,THIRD=2};
 class Poisson
 {
 public:
-	template<typename S,typename T> void static poissonEditing(S &srcMat,S &resultMat,T &regionMask,vector<int> position,int regionPixelNumber,Channle channel,double lowBoundary,double highBoundary)
+	template<typename S,typename U> void static poissonEditing(S &srcMat,S &resultMat,U &regionMask,vector<int> position,int regionPixelNumber,Channle channel,double lowBoundary,double highBoundary)
 	{
-		SpMat A(regionPixelnumber,regionPixelnumber);
-		Eigen::VectorXd x(regionPixelnumber),b(regionPixelnumber);
+		SpMat A(regionPixelNumber,regionPixelNumber);
+		Eigen::VectorXd x(regionPixelNumber),b(regionPixelNumber);
 		A.setZero();
 		x.setZero();
 		b.setZero();
-		vector<T> tripleList;
+		vector<Tri> tripleList;
 		int count=0;
-		int w=srcMat.cols,h=srcMat.rows;
+		int w=srcMat->cols,h=srcMat->rows;
 		for(int i=0;i<h;++i)
 			for(int j=0;j<w;++j)
 			{
-				if(regionMask->at<T::STEP>(i,j)==PIXEL_SELECTED_VALUE)
+				if(regionMask->at<U::STEP>(i,j)==PIXEL_SELECTED_VALUE)
 				{
 					//please pay attention to the region boundary
-					tripleList.push_back(T(count,count,4));
+					tripleList.push_back(Tri(count,count,4));
 					//up
-					if(i!=0&&regionMask->at<T::STEP>(i-1,j)==PIXEL_SELECTED_VALUE)
+					if(i!=0&&regionMask->at<U::STEP>(i-1,j)==PIXEL_SELECTED_VALUE)
 					{
-						tripleList.push_back(T(count,position[(i-1)*w+j],-1));
+						tripleList.push_back(Tri(count,position[(i-1)*w+j],-1));
 						b(count)+=(double)srcMat->at<S::STEP>(i,j)[channel]-(double)srcMat->at<S::STEP>(i-1,j)[channel];
 					}
 					else
 						b(count)+=srcMat->at<S::STEP>(i-1,j)[channel];
 					//down
-					if(i!=(h-1)&&regionMask->at<T:STEP>(i+1,j)==PIXEL_SELECTED_VALUE)
+					if(i!=(h-1)&&regionMask->at<U::STEP>(i+1,j)==PIXEL_SELECTED_VALUE)
 					{
-						tripleList.push_back(T(count,position[(i+1)*w+j],-1));
+						tripleList.push_back(Tri(count,position[(i+1)*w+j],-1));
 						b(count)+=(double)srcMat->at<S::STEP>(i,j)[channel]-(double)srcMat->at<S::STEP>(i+1,j)[channel];
 					}
 					else
 						b(count)+=srcMat->at<S::STEP>(i+1,j)[channel];
 					//left
-					if(j!=0&&regionMask->at<T::STEP>(i,j-1)==PIXEL_SELECTED_VALUE)
+					if(j!=0&&regionMask->at<U::STEP>(i,j-1)==PIXEL_SELECTED_VALUE)
 					{
-						tripleList.push_back(T(count,position[i*w+j-1],-1));
+						tripleList.push_back(Tri(count,position[i*w+j-1],-1));
 						b(count)+=(double)srcMat->at<S::STEP>(i,j)[channel]-(double)srcMat->at<S::STEP>(i,j-1)[channel];
 					}
 
 					else
 						b(count)+=srcMat->at<S::STEP>(i,j-1)[channel];
 					//right
-					if(j!=(w-1)&&regionMask->at<T::STEP>(i,j+1)==PIXEL_SELECTED_VALUE)
+					if(j!=(w-1)&&regionMask->at<U::STEP>(i,j+1)==PIXEL_SELECTED_VALUE)
 					{
-						tripleList.push_back(T(count,position[i*w+j+1],-1));
+						tripleList.push_back(Tri(count,position[i*w+j+1],-1));
 						b(count)+=(double)srcMat->at<S::STEP>(i,j)[channel]-(double)srcMat->at<S::STEP>(i,j+1)[channel];
 					}
 					else
@@ -70,9 +70,9 @@ public:
 					if(regionMask->at<uchar>(i,j)==PIXEL_SELECTED_VALUE)
 					{
 						pixelValue=x(position[i*w+j]);
-						pixelValue=pixelValue<lowPixelValueBoundary?lowPixelValueBoundary:pixelValue;
-						pixelValue=pixelValue>highPixelValueBoundary?highPixelValueBoundary:pixelValue;
-						resultMat.at<Vec3b>(i,j)[channel]=(uchar)pixelValue;
+						pixelValue=pixelValue<lowBoundary?lowBoundary:pixelValue;
+						pixelValue=pixelValue>highBoundary?highBoundary:pixelValue;
+						resultMat->at<S::STEP>(i,j)[channel]=(uchar)pixelValue;
 					}
 				}
 	}

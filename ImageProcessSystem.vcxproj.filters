@@ -37,6 +37,11 @@
     <Filter Include="DataStructure">
       <UniqueIdentifier>{cc88de47-655f-44ac-a5aa-b05cbcea1fe9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+      <ParseFiles>true</ParseFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_imageprocesssystem.cpp">
@@ -132,6 +137,12 @@
     <ClCompile Include="GeneratedFiles\Release\moc_InteractiveLocalEnhencementWidget.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="ImageTriangle.cpp">
+      <Filter>ImageProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="triangle\triangle.c">
+      <Filter>ImageProcess</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="imageprocesssystem.ui">
@@ -221,6 +232,12 @@
       <Filter>ImageProcess</Filter>
     </ClInclude>
     <ClInclude Include="Poisson.h">
+      <Filter>ImageProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageTriangle.h">
+      <Filter>ImageProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="triangle\triangle.h">
       <Filter>ImageProcess</Filter>
     </ClInclude>
   </ItemGroup>
