@@ -143,6 +143,9 @@
     <ClCompile Include="triangle\triangle.c">
       <Filter>ImageProcess</Filter>
     </ClCompile>
+    <ClCompile Include="InteractiveTriangleLabel.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="imageprocesssystem.ui">
@@ -239,6 +242,9 @@
     </ClInclude>
     <ClInclude Include="triangle\triangle.h">
       <Filter>ImageProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractiveTriangleLabel.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

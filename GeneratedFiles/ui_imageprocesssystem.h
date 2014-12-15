@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'imageprocesssystem.ui'
 **
-** Created: Mon Dec 15 16:10:29 2014
+** Created: Mon Dec 15 20:14:00 2014
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -50,6 +50,8 @@ public:
     QAction *actionInteractiveColorLevel;
     QAction *actionInteractiveColorBalance;
     QAction *actionSuperPixel;
+    QAction *actionInteractiveTriangle;
+    QAction *actionTriangle;
     QWidget *centralWidget;
     QLabel *pixelValueLabel;
     QListWidget *listWidget;
@@ -170,6 +172,18 @@ public:
         QIcon icon14;
         icon14.addFile(QString::fromUtf8(":/pictures/superpixel.jpg"), QSize(), QIcon::Normal, QIcon::Off);
         actionSuperPixel->setIcon(icon14);
+        actionInteractiveTriangle = new QAction(ImageProcessSystemClass);
+        actionInteractiveTriangle->setObjectName(QString::fromUtf8("actionInteractiveTriangle"));
+        actionInteractiveTriangle->setEnabled(false);
+        QIcon icon15;
+        icon15.addFile(QString::fromUtf8(":/pictures/trianglnoteselected.jpg"), QSize(), QIcon::Normal, QIcon::Off);
+        actionInteractiveTriangle->setIcon(icon15);
+        actionTriangle = new QAction(ImageProcessSystemClass);
+        actionTriangle->setObjectName(QString::fromUtf8("actionTriangle"));
+        actionTriangle->setEnabled(false);
+        QIcon icon16;
+        icon16.addFile(QString::fromUtf8(":/pictures/triangleicon.jpg"), QSize(), QIcon::Normal, QIcon::Off);
+        actionTriangle->setIcon(icon16);
         centralWidget = new QWidget(ImageProcessSystemClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         centralWidget->setEnabled(true);
@@ -220,6 +234,7 @@ public:
         mainToolBar->addAction(actionHighLightDetection);
         mainToolBar->addAction(actionHighlightRemoval);
         mainToolBar->addAction(actionSuperPixel);
+        mainToolBar->addAction(actionTriangle);
         mainToolBar->addAction(actionCancel);
         mainToolBar->addSeparator();
         mainToolBar->addAction(actionInteractiveLocalEnhencement);
@@ -228,6 +243,7 @@ public:
         mainToolBar->addAction(actionInteractiveFace);
         mainToolBar->addAction(actionInteractiveColorLevel);
         mainToolBar->addAction(actionInteractiveColorBalance);
+        mainToolBar->addAction(actionInteractiveTriangle);
         mainToolBar->addAction(actionSwitch);
 
         retranslateUi(ImageProcessSystemClass);
@@ -259,6 +275,8 @@ public:
         actionInteractiveColorLevel->setText(QApplication::translate("ImageProcessSystemClass", "InteractiveColorLevel", 0, QApplication::UnicodeUTF8));
         actionInteractiveColorBalance->setText(QApplication::translate("ImageProcessSystemClass", "InteractiveColorBalance", 0, QApplication::UnicodeUTF8));
         actionSuperPixel->setText(QApplication::translate("ImageProcessSystemClass", "SuperPixel", 0, QApplication::UnicodeUTF8));
+        actionInteractiveTriangle->setText(QApplication::translate("ImageProcessSystemClass", "InteractiveTriangle", 0, QApplication::UnicodeUTF8));
+        actionTriangle->setText(QApplication::translate("ImageProcessSystemClass", "Triangle", 0, QApplication::UnicodeUTF8));
         pixelValueLabel->setText(QString());
         menu_Tools->setTitle(QApplication::translate("ImageProcessSystemClass", "&Tools", 0, QApplication::UnicodeUTF8));
         faceDetetingMenu->setTitle(QApplication::translate("ImageProcessSystemClass", "\344\272\272\350\204\270\346\243\200\346\265\213", 0, QApplication::UnicodeUTF8));

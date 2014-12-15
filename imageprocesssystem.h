@@ -41,6 +41,7 @@ public:
 	void inline updateDisplayImage();
 	~ImageProcessSystem();
 public slots:
+	void interactiveTriangleActionTriggered();
 	void interactiveLacalEnhencementActionTriggered();
 	void intercativeHighlightActionTriggered();
 	void interactiveColorCorrectionActionTriggered();
@@ -59,6 +60,7 @@ public slots:
 	void saveFile();
 	void faceDetectingUsingColorModel();
 	void faceDetectingCombined();
+	void triangle();
 	void automaticFaceDetecting();
 	void automaticHighlightDetecting();
 	void highlightDetection();
@@ -91,6 +93,7 @@ private:
 	vector<QString> fileNames;
 	//used for cancel operation
 	stack<QImage> images;
+	//color correction
 	int redMeans,greenMeans,blueMeans;
 	int tolerance,featherRadius;
 	MatWrapper<uchar> faceMask;
@@ -116,6 +119,9 @@ private:
 	bool interactiveOptionWidgetHasInit;
 	//updateMat or not
 	bool interactiveHasProduceResult;
+	//Triangle interactive
+	struct triangulateio io;
+	vector<double> pointX,pointY;
 };
 #endif // IMAGEPROCESSSYSTEM_H
 #endif

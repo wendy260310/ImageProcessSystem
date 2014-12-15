@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="/pictures">
+    <file>triangleicon.jpg</file>
+    <file>triangleselected.jpg</file>
+    <file>trianglnoteselected.jpg</file>
     <file>superpixel.jpg</file>
     <file>colorbalancenotselected.jpg</file>
     <file>colorbalanceselected.jpg</file>

@@ -18,7 +18,7 @@
 #include "InteractiveColorCorrectionWidget.h"
 #include "SLIC.h"
 #include "Poisson.h"
-
+#include "InteractiveTriangleLabel.h"
 Engine * MatlabEngineHolder::eng=NULL;
 ImageProcessSystem::ImageProcessSystem(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
@@ -76,6 +76,8 @@ void ImageProcessSystem::connnecting()
 	connect(ui.actionInteractiveColorLevel,SIGNAL(triggered()),this,SLOT(interactiveColorLevelTriggered()));
 	connect(ui.actionInteractiveColorBalance,SIGNAL(triggered()),this,SLOT(interacitveColorBalanceTriggered()));
 	connect(ui.actionSuperPixel,SIGNAL(triggered()),this,SLOT(superPixelActionTriggered()));
+	connect(ui.actionInteractiveTriangle,SIGNAL(triggered()),this,SLOT(interactiveTriangleActionTriggered()));
+	connect(ui.actionTriangle,SIGNAL(triggered()),this,SLOT(triangle()));
 }
 void ImageProcessSystem::displayColorParametersDialog()
 {
@@ -228,6 +230,23 @@ void ImageProcessSystem::automaticFaceDetecting()
 	ImageLabel->displayImage(faceMaskImage);
 #endif
 	updateToolBar();
+}
+void ImageProcessSystem::interactiveTriangleActionTriggered()
+{
+	if(interactiveStatus&INTERACTIVE_TRIANGLE_SELECTED)
+		return;
+	if(interactiveHasProduceResult)
+	{
+		interactiveHasProduceResult=false;
+		updateMat();
+	}
+	interactiveStatus=INTERACTIVE_TRIANGLE_SELECTED;
+	delete ImageLabel;
+	ImageLabel=new InteractiveTriangleLabel(pointX,pointY,ui.centralWidget);
+	initImageLabel();
+	((InteractiveTriangleLabel *)ImageLabel)->initDrawingImage();
+	updateToolBar();
+	updateDisplayImage();
 }
 void ImageProcessSystem::interacitveColorBalanceTriggered()
 {
@@ -500,6 +519,13 @@ void ImageProcessSystem::listWidgetClicked(QListWidgetItem *item)
 	initMat();
 	initImageLabel();
 }
+void ImageProcessSystem::triangle()
+{
+	resultImage=srcImage.copy(0,0,srcImage.width(),srcImage.height());
+	ImageTriangle::bulitTri(pointX,pointY,io);
+	renderTriangle(io,resultImage);
+	ImageLabel->displayImage(resultImage);
+}
 void ImageProcessSystem::renderTriangle(struct triangulateio &out,QImage &img)
 {
 	QPainter p(&img);
@@ -552,50 +578,31 @@ void ImageProcessSystem::superPixelActionTriggered()
 	engEvalString(ep,"img=img';");
 	engEvalString(ep,"cd bin/symmetry;");
 	engEvalString(ep,"[keyVector,X,Y]=symmetry(img,'mirror');");
-	//xInMatlab=engGetVariable(ep,"X");
-	//yInMatlab=engGetVariable(ep,"Y");
-	keyVector=engGetVariable(ep,"keyVector");
-	int keyVecotrM=mxGetM(keyVector),keyVectorN=mxGetN(keyVector);
-	double *keyVectorData=mxGetPr(keyVector);
-	vector<REAL> pointX,pointY;
-	pointX.push_back(face.x);
-	pointX.push_back(face.x+faceImgWidth);
-	pointX.push_back(face.x+faceImgWidth);
-	pointX.push_back(face.x);
-	pointY.push_back(face.y);
-	pointY.push_back(face.y);
-	pointY.push_back(face.y+faceImgHeight);
-	pointY.push_back(face.y+faceImgHeight);
-	for(int i=1;i<=keyVecotrM;++i)
-	{
-		pointX.push_back(keyVectorData[keyVectorN*i]+face.x);
-		pointY.push_back(keyVectorData[keyVectorN*i+1]+face.y);
-	}
-	resultImage=srcImage.copy(0,0,srcImage.width(),srcImage.height());
-	struct triangulateio io;
-	ImageTriangle::bulitTri(pointX,pointY,io);
-	renderTriangle(io,resultImage);
-	ImageLabel->displayImage(resultImage);
-	//double *xData=mxGetPr(xInMatlab);
-	//double *yData=mxGetPr(yInMatlab);
-	//int n=mxGetN(yInMatlab);
-	//if(n==0)
-	//	return;
-	//// we assume the symmetry axis is vertical
-	//int symmetryAxisX;
-	//double sum=0;
-	//for(int i=0;i<n;++i)
-	//	sum+=xData[i];
-	//symmetryAxisX=(int)(sum/n);
-	//faceImgWidth=2*(symmetryAxisX+1);
-	////here faceImageWidth may exceeds the boundary,we treat it as error
-	//if(faceImgWidth>=srcImage.width()-face.x)
-	//	return ;
-	//mxDestroyArray(imgDataMatlab);
-	//mxDestroyArray(xInMatlab);
-	//mxDestroyArray(yInMatlab);
+	xInMatlab=engGetVariable(ep,"X");
+	yInMatlab=engGetVariable(ep,"Y");
+	double *xData=mxGetPr(xInMatlab);
+	double *yData=mxGetPr(yInMatlab);
+	int n=mxGetN(yInMatlab);
+	if(n==0)
+		return;
+	// we assume the symmetry axis is vertical
+	int symmetryAxisX;
+	double sum=0;
+	for(int i=0;i<n;++i)
+		sum+=xData[i];
+	symmetryAxisX=(int)(sum/n);
+	faceImgWidth=2*(symmetryAxisX+1);
+	//here faceImageWidth may exceeds the boundary,we treat it as error
+	if(faceImgWidth>=srcImage.width()-face.x)
+		return ;
+	QPainter p(&srcImage);
+	p.drawLine(symmetryAxisX+face.x,face.y,symmetryAxisX+face.x,face.y+faceImgHeight);
+	p.end();
+	mxDestroyArray(imgDataMatlab);
+	mxDestroyArray(xInMatlab);
+	mxDestroyArray(yInMatlab);
 	//mxDestroyArray(keyVector);
-	//delete [] grayImageData;
+	delete [] grayImageData;
 	////
 	//vector<int> position(srcMat->rows*srcMat->cols,0);
 	//int pixelNumber=0;
@@ -779,7 +786,7 @@ void ImageProcessSystem::superPixelActionTriggered()
 #else
 	//updateMat();
 	//updateToolBar();
-	//updateDisplayImage();
+	updateDisplayImage();
 #endif
 }
 void ImageProcessSystem::saveFile()
@@ -795,6 +802,7 @@ void ImageProcessSystem::updateToolBar()
 	{
 		ui.actionColorCorrection->setEnabled(false);
 		ui.actionHighLightDetection->setEnabled(false);
+		ui.actionTriangle->setEnabled(false);
 		ui.actionHighlightRemoval->setEnabled(false);
 		ui.actionSave->setEnabled(false);
 		ui.actionFace->setEnabled(false);
@@ -810,6 +818,7 @@ void ImageProcessSystem::updateToolBar()
 			ui.actionInteractiveColorBalance->setEnabled(false);
 			ui.actionSwitch->setEnabled(false);
 			ui.actionInteractiveFace->setEnabled(false);
+			ui.actionInteractiveTriangle->setEnabled(false);
 			if(images.empty())
 				ui.actionCancel->setEnabled(false);
 			else
@@ -868,11 +877,20 @@ void ImageProcessSystem::updateToolBar()
 			{
 				ui.actionInteractiveColorBalance->setIcon(QIcon(QString::fromUtf8(":/pictures/colorbalancenotselected.jpg")));
 			}
+			if(interactiveStatus&INTERACTIVE_TRIANGLE_SELECTED)
+			{
+				ui.actionInteractiveTriangle->setIcon(QIcon(QString::fromUtf8(":/pictures/triangleselected.jpg")));
+			}
+			else
+			{
+				ui.actionInteractiveColorBalance->setIcon(QIcon(QString::fromUtf8(":/pictures/trianglnoteselected.jpg")));
+			}
 		}
 	}
 	else
 	{
 		ui.actionColorCorrection->setEnabled(true);
+		ui.actionTriangle->setEnabled(true);
 		ui.actionSuperPixel->setEnabled(true);
 		ui.actionHighLightDetection->setEnabled(true);
 		ui.actionHighlightRemoval->setEnabled(true);
@@ -886,6 +904,7 @@ void ImageProcessSystem::updateToolBar()
 		ui.actionInteractiveFace->setEnabled(true);
 		ui.actionInteractiveColorLevel->setEnabled(true);
 		ui.actionInteractiveColorBalance->setEnabled(true);
+		ui.actionInteractiveTriangle->setEnabled(true);
 		if(images.empty())
 			ui.actionCancel->setEnabled(false);
 		else
@@ -900,6 +919,7 @@ void ImageProcessSystem::updateToolBar()
 		ui.actionInteractiveFace->setIcon(QIcon(QString::fromUtf8(":/pictures/facenotselected.jpg")));
 		ui.actionInteractiveColorLevel->setIcon(QIcon(QString::fromUtf8(":/pictures/colorlevelnotselected.jpg")));
 		ui.actionInteractiveColorBalance->setIcon(QIcon(QString::fromUtf8(":/pictures/colorbalancenotselected.jpg")));
+		ui.actionInteractiveTriangle->setIcon(QIcon(QString::fromUtf8(":/pictures/trianglnoteselected.jpg")));
 		ui.actionSwitch->setEnabled(false);
 	}
 }

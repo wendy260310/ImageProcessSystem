@@ -113,6 +113,7 @@
    <addaction name="actionHighLightDetection"/>
    <addaction name="actionHighlightRemoval"/>
    <addaction name="actionSuperPixel"/>
+   <addaction name="actionTriangle"/>
    <addaction name="actionCancel"/>
    <addaction name="separator"/>
    <addaction name="actionInteractiveLocalEnhencement"/>
@@ -121,6 +122,7 @@
    <addaction name="actionInteractiveFace"/>
    <addaction name="actionInteractiveColorLevel"/>
    <addaction name="actionInteractiveColorBalance"/>
+   <addaction name="actionInteractiveTriangle"/>
    <addaction name="actionSwitch"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
@@ -342,6 +344,30 @@
    </property>
    <property name="text">
     <string>SuperPixel</string>
+   </property>
+  </action>
+  <action name="actionInteractiveTriangle">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/trianglnoteselected.jpg</normaloff>:/pictures/trianglnoteselected.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>InteractiveTriangle</string>
+   </property>
+  </action>
+  <action name="actionTriangle">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/triangleicon.jpg</normaloff>:/pictures/triangleicon.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>Triangle</string>
    </property>
   </action>
  </widget>

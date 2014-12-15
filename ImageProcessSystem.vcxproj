@@ -129,6 +129,7 @@
     <ClCompile Include="InteractiveHighlightWidget.cpp" />
     <ClCompile Include="InteractiveImageLabel.cpp" />
     <ClCompile Include="InteractiveLocalEnhencementWidget.cpp" />
+    <ClCompile Include="InteractiveTriangleLabel.cpp" />
     <ClCompile Include="LocalEnhencementLabel.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OriginalImageLabel.cpp" />
@@ -166,6 +167,7 @@
   <ItemGroup>
     <ClInclude Include="header.h" />
     <ClInclude Include="ImageTriangle.h" />
+    <ClInclude Include="InteractiveTriangleLabel.h" />
     <ClInclude Include="Poisson.h" />
     <ClInclude Include="SLIC.h" />
     <ClInclude Include="triangle\triangle.h" />

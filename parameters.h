@@ -50,6 +50,7 @@ const unsigned char INTERACTIVE_HIGHLIGHT_SELECTED=0x04;
 const unsigned char INTERACTIVE_FACE_SELECTED=0x08;
 const unsigned char INTERACTIVE_COLOR_LEVEL_SELECTED=0x10;
 const unsigned char INTERACTIVE_COLOR_BALANCE_SELECTED=0x20;
+const unsigned char INTERACTIVE_TRIANGLE_SELECTED=0x40;
 const unsigned int INTERACTIVE_PIXEL_VALUE=0xff00ff00;
 const double pai=3.1415926;
 const unsigned char GRADIENT_ORIENTATION_HORIZONTAL=0x01;
