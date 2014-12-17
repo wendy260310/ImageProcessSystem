@@ -523,13 +523,13 @@ void ImageProcessSystem::triangle()
 {
 	resultImage=srcImage.copy(0,0,srcImage.width(),srcImage.height());
 	ImageTriangle::bulitTri(pointX,pointY,io);
-	renderTriangle(io,resultImage);
+	renderTriangle(io,resultImage,RENDER_BOTH_TWO_SIDES);
 	ImageLabel->displayImage(resultImage);
 }
-void ImageProcessSystem::renderTriangle(struct triangulateio &out,QImage &img)
+void ImageProcessSystem::renderTriangle(struct triangulateio &out,QImage &img,unsigned char mode)
 {
 	QPainter p(&img);
-	double startX,startY,endX,endY;
+	double startX,startY,endX,endY,symmStartX,symmStartY,symmEndX,symmEndY;
 	for(int i=0;i<out.numberofedges;++i)
 	{
 		startX=out.pointlist[2*out.edgelist[2*i]];
@@ -537,6 +537,14 @@ void ImageProcessSystem::renderTriangle(struct triangulateio &out,QImage &img)
 		endX=out.pointlist[2*out.edgelist[2*i+1]];
 		endY=out.pointlist[2*out.edgelist[2*i+1]+1];
 		p.drawLine(startX,startY,endX,endY);
+		if(mode&RENDER_BOTH_TWO_SIDES)
+		{
+			symmStartX=(2*symmetryAxisX+1-(startX-face.x))+face.x;
+			symmStartY=startY;
+			symmEndX=(2*symmetryAxisX+1-(endX-face.x))+face.x;
+			symmEndY=endY;
+			p.drawLine(symmStartX,symmStartY,symmEndX,symmEndY);
+		}
 	}
 	p.end();
 }
@@ -586,7 +594,6 @@ void ImageProcessSystem::superPixelActionTriggered()
 	if(n==0)
 		return;
 	// we assume the symmetry axis is vertical
-	int symmetryAxisX;
 	double sum=0;
 	for(int i=0;i<n;++i)
 		sum+=xData[i];
@@ -594,7 +601,10 @@ void ImageProcessSystem::superPixelActionTriggered()
 	faceImgWidth=2*(symmetryAxisX+1);
 	//here faceImageWidth may exceeds the boundary,we treat it as error
 	if(faceImgWidth>=srcImage.width()-face.x)
-		return ;
+	{
+		symmetryAxisX=0;
+		return;
+	}
 	QPainter p(&srcImage);
 	p.drawLine(symmetryAxisX+face.x,face.y,symmetryAxisX+face.x,face.y+faceImgHeight);
 	p.end();

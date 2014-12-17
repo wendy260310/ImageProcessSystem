@@ -15,6 +15,9 @@ const double colorModelCov00=160.1301;
 const double colorModelCov01=12.143;
 const double colorModelCov10=12.143;
 const double colorModelCov11=299.4574;
+//Triangle
+const unsigned char RENDER_ONLY_ONE_SIDE=0x01;
+const unsigned char RENDER_BOTH_TWO_SIDES=0x02;
 //highlight detection parameters
 const unsigned char HIGHLIGHT_PIXEL_VALUE=255;
 const unsigned char NOTHIGHLIGHT_PIXEL_VALUE=0;
