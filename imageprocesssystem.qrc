@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/pictures">
+    <file>meshEditingSelected.jpg</file>
+    <file>mesheditingnotselected.jpg</file>
     <file>triangleicon.jpg</file>
     <file>triangleselected.jpg</file>
     <file>trianglnoteselected.jpg</file>

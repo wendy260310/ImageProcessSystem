@@ -98,4 +98,10 @@ private:
 //using namespace stdext;
 typedef Eigen::SparseMatrix<double> SpMat;
 typedef Eigen::Triplet<double> Tri;
+#ifdef SINGLE
+#define REAL float
+#else /* not SINGLE */
+#define REAL double
+#endif /* not SINGLE */s
+#define VOID void
 #endif

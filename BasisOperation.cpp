@@ -817,3 +817,17 @@ void BasisOperation::poissonEditing(Mat &srcMat,Mat &resultMat,Mat &regionMask,i
 			}
 		}
 }
+void BasisOperation::renderingTriangle(struct triangulateio &out,QImage &img)
+{
+	QPainter p(&img);
+	double startX,startY,endX,endY,symmStartX,symmStartY,symmEndX,symmEndY;
+	for(int i=0;i<out.numberofedges;++i)
+	{
+		startX=out.pointlist[2*out.edgelist[2*i]];
+		startY=out.pointlist[2*out.edgelist[2*i]+1];
+		endX=out.pointlist[2*out.edgelist[2*i+1]];
+		endY=out.pointlist[2*out.edgelist[2*i+1]+1];
+		p.drawLine(startX,startY,endX,endY);
+	}
+	p.end();
+}

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'imageprocesssystem.ui'
 **
-** Created: Mon Dec 15 20:14:00 2014
+** Created: Thu Dec 18 14:24:35 2014
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -52,6 +52,7 @@ public:
     QAction *actionSuperPixel;
     QAction *actionInteractiveTriangle;
     QAction *actionTriangle;
+    QAction *actionMeshEditing;
     QWidget *centralWidget;
     QLabel *pixelValueLabel;
     QListWidget *listWidget;
@@ -184,6 +185,12 @@ public:
         QIcon icon16;
         icon16.addFile(QString::fromUtf8(":/pictures/triangleicon.jpg"), QSize(), QIcon::Normal, QIcon::Off);
         actionTriangle->setIcon(icon16);
+        actionMeshEditing = new QAction(ImageProcessSystemClass);
+        actionMeshEditing->setObjectName(QString::fromUtf8("actionMeshEditing"));
+        actionMeshEditing->setEnabled(false);
+        QIcon icon17;
+        icon17.addFile(QString::fromUtf8(":/pictures/mesheditingnotselected.jpg"), QSize(), QIcon::Normal, QIcon::Off);
+        actionMeshEditing->setIcon(icon17);
         centralWidget = new QWidget(ImageProcessSystemClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         centralWidget->setEnabled(true);
@@ -244,6 +251,7 @@ public:
         mainToolBar->addAction(actionInteractiveColorLevel);
         mainToolBar->addAction(actionInteractiveColorBalance);
         mainToolBar->addAction(actionInteractiveTriangle);
+        mainToolBar->addAction(actionMeshEditing);
         mainToolBar->addAction(actionSwitch);
 
         retranslateUi(ImageProcessSystemClass);
@@ -277,6 +285,7 @@ public:
         actionSuperPixel->setText(QApplication::translate("ImageProcessSystemClass", "SuperPixel", 0, QApplication::UnicodeUTF8));
         actionInteractiveTriangle->setText(QApplication::translate("ImageProcessSystemClass", "InteractiveTriangle", 0, QApplication::UnicodeUTF8));
         actionTriangle->setText(QApplication::translate("ImageProcessSystemClass", "Triangle", 0, QApplication::UnicodeUTF8));
+        actionMeshEditing->setText(QApplication::translate("ImageProcessSystemClass", "MeshEditing", 0, QApplication::UnicodeUTF8));
         pixelValueLabel->setText(QString());
         menu_Tools->setTitle(QApplication::translate("ImageProcessSystemClass", "&Tools", 0, QApplication::UnicodeUTF8));
         faceDetetingMenu->setTitle(QApplication::translate("ImageProcessSystemClass", "\344\272\272\350\204\270\346\243\200\346\265\213", 0, QApplication::UnicodeUTF8));

@@ -45,6 +45,8 @@ void ImageProcessSystem::initParameters()
 	interactiveOptionWidgetHasInit=false;
 	interactiveHasProduceResult=false;
 	faceDetector::loadCascade();
+	ImageTriangle::initTriangulateio(io);
+	ImageTriangle::initTriangulateio(symmIO);
 }
 ImageProcessSystem::~ImageProcessSystem()
 {
@@ -522,32 +524,26 @@ void ImageProcessSystem::listWidgetClicked(QListWidgetItem *item)
 void ImageProcessSystem::triangle()
 {
 	resultImage=srcImage.copy(0,0,srcImage.width(),srcImage.height());
+	ImageTriangle::freeTriangulateio(io);
+	ImageTriangle::initTriangulateio(io);
+	ImageTriangle::freeTriangulateio(symmIO);
+	ImageTriangle::initTriangulateio(symmIO);
 	ImageTriangle::bulitTri(pointX,pointY,io);
-	renderTriangle(io,resultImage,RENDER_BOTH_TWO_SIDES);
+	symmIO.edgelist=(int *)(malloc(sizeof(int)*2*io.numberofedges));
+	symmIO.pointlist=(double *)malloc(sizeof(double)*2*io.numberofpoints);
+	symmIO.numberofedges=io.numberofedges;
+	symmIO.numberofpoints=io.numberofpoints;
+	memcpy(symmIO.edgelist,io.edgelist,2*sizeof(int)*io.numberofedges);
+	for(int i=0;i<io.numberofpoints;++i)
+	{
+		symmIO.pointlist[2*i]=2*symmetryAxisX+1-io.pointlist[2*i]+2*face.x;
+		symmIO.pointlist[2*i+1]=io.pointlist[2*i+1];
+	}
+	BasisOperation::renderingTriangle(io,resultImage);
+	BasisOperation::renderingTriangle(symmIO,resultImage);
 	ImageLabel->displayImage(resultImage);
 }
-void ImageProcessSystem::renderTriangle(struct triangulateio &out,QImage &img,unsigned char mode)
-{
-	QPainter p(&img);
-	double startX,startY,endX,endY,symmStartX,symmStartY,symmEndX,symmEndY;
-	for(int i=0;i<out.numberofedges;++i)
-	{
-		startX=out.pointlist[2*out.edgelist[2*i]];
-		startY=out.pointlist[2*out.edgelist[2*i]+1];
-		endX=out.pointlist[2*out.edgelist[2*i+1]];
-		endY=out.pointlist[2*out.edgelist[2*i+1]+1];
-		p.drawLine(startX,startY,endX,endY);
-		if(mode&RENDER_BOTH_TWO_SIDES)
-		{
-			symmStartX=(2*symmetryAxisX+1-(startX-face.x))+face.x;
-			symmStartY=startY;
-			symmEndX=(2*symmetryAxisX+1-(endX-face.x))+face.x;
-			symmEndY=endY;
-			p.drawLine(symmStartX,symmStartY,symmEndX,symmEndY);
-		}
-	}
-	p.end();
-}
+
 void ImageProcessSystem::openFile()
 {
 	fileName=QFileDialog::getOpenFileName(this,"Open File",QDir::currentPath(),"Images (*.bmp *.gif *.jpg *.jpeg *.png *.tiff)");

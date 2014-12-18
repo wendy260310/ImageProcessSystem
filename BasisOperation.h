@@ -1,6 +1,7 @@
 #ifndef BASIS_OPERATION_H
 #define BASIS_OPERATION_H
 #include "header.h"
+#include "triangle/triangle.h"
 class BasisOperation
 {
 public:
@@ -32,6 +33,8 @@ public:
 	int static searchCul(double *culHis,double value,int bins);
 	//only for hsv 
 	double static thresholdOstuMethod(Mat &hsvMat,Mat &faceMask,Rect face,int channel);
+	//triangle rendering
+	void static renderingTriangle(struct triangulateio &out,QImage &img);
 private:
 	//work with regionExtraction
 	bool static insertIntoQueue(Mat *srcMat,Mat *regionMask,int threhold,int x1,int y1,int x2,int y2,queue<QPoint> &pixelQueue);

@@ -76,7 +76,6 @@ public slots:
 	void superPixelActionTriggered();
 private:
 	void inline resetStatus();
-	void renderTriangle(struct triangulateio &out,QImage &img,unsigned char mode);
 	bool colorCorrection();
 	bool loadImage();
 	void connnecting();
@@ -121,7 +120,7 @@ private:
 	bool interactiveHasProduceResult;
 	//Triangle interactive
 	int symmetryAxisX;
-	struct triangulateio io;
+	struct triangulateio io,symmIO;
 	vector<double> pointX,pointY;
 };
 #endif // IMAGEPROCESSSYSTEM_H

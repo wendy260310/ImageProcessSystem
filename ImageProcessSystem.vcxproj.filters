@@ -146,6 +146,9 @@
     <ClCompile Include="InteractiveTriangleLabel.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="MeshEditingLabel.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="imageprocesssystem.ui">
@@ -244,6 +247,9 @@
       <Filter>ImageProcess</Filter>
     </ClInclude>
     <ClInclude Include="InteractiveTriangleLabel.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshEditingLabel.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>

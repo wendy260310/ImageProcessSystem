@@ -247,7 +247,8 @@
 /*  not used, `numberofsegments' will indicate the number of boundary edges. */
 /*                                                                           */
 /*****************************************************************************/
-
+#ifndef TRIANGLE_H
+#define TRIANGLE_H
 struct triangulateio {
   REAL *pointlist;                                               /* In / out */
   REAL *pointattributelist;                                      /* In / out */
@@ -287,3 +288,4 @@ void trifree(VOID *memptr);
 void triangulate();
 void trifree();
 #endif /* not ANSI_DECLARATORS */
+#endif

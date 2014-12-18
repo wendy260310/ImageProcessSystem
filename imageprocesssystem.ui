@@ -123,6 +123,7 @@
    <addaction name="actionInteractiveColorLevel"/>
    <addaction name="actionInteractiveColorBalance"/>
    <addaction name="actionInteractiveTriangle"/>
+   <addaction name="actionMeshEditing"/>
    <addaction name="actionSwitch"/>
   </widget>
   <widget class="QStatusBar" name="statusBar">
@@ -368,6 +369,18 @@
    </property>
    <property name="text">
     <string>Triangle</string>
+   </property>
+  </action>
+  <action name="actionMeshEditing">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="imageprocesssystem.qrc">
+     <normaloff>:/pictures/mesheditingnotselected.jpg</normaloff>:/pictures/mesheditingnotselected.jpg</iconset>
+   </property>
+   <property name="text">
+    <string>MeshEditing</string>
    </property>
   </action>
  </widget>
