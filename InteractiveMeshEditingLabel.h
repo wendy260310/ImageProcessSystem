@@ -6,14 +6,14 @@ class InteractiveMeshEditingLabel:public OriginalImageLabel
 {
 public:
 	InteractiveMeshEditingLabel(struct triangulateio &_io,struct triangulateio &_symmIO,QWidget *parent=0);
+	void displayTriangle();
 protected:
 	void mousePressEvent(QMouseEvent *ev);
 	void mouseReleaseEvent(QMouseEvent *ev);
 	void mouseMoveEvent(QMouseEvent *ev);
 private:
-	void displayTriangle();
 	void pointSelect(QPoint &p);
-	struct triangulateio &io,symmIO;
+	struct triangulateio &io,&symmIO;
 	QImage drawingImage;
 	int currentSelectedPointIndex;
 	QPoint startPos;

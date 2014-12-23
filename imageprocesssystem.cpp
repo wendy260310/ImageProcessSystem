@@ -19,6 +19,7 @@
 #include "SLIC.h"
 #include "Poisson.h"
 #include "InteractiveTriangleLabel.h"
+#include "InteractiveMeshEditingLabel.h"
 Engine * MatlabEngineHolder::eng=NULL;
 ImageProcessSystem::ImageProcessSystem(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
@@ -80,6 +81,7 @@ void ImageProcessSystem::connnecting()
 	connect(ui.actionSuperPixel,SIGNAL(triggered()),this,SLOT(superPixelActionTriggered()));
 	connect(ui.actionInteractiveTriangle,SIGNAL(triggered()),this,SLOT(interactiveTriangleActionTriggered()));
 	connect(ui.actionTriangle,SIGNAL(triggered()),this,SLOT(triangle()));
+	connect(ui.actionMeshEditing,SIGNAL(triggered()),this,SLOT(interactiveMeshEditingActionTriggered()));
 }
 void ImageProcessSystem::displayColorParametersDialog()
 {
@@ -249,6 +251,24 @@ void ImageProcessSystem::interactiveTriangleActionTriggered()
 	((InteractiveTriangleLabel *)ImageLabel)->initDrawingImage();
 	updateToolBar();
 	updateDisplayImage();
+}
+void ImageProcessSystem::interactiveMeshEditingActionTriggered()
+{
+	if(interactiveStatus&INTERACTIVE_MESH_EDITING)
+		return;
+	if(interactiveHasProduceResult)
+	{
+		interactiveHasProduceResult=false;
+		updateMat();
+	}
+	interactiveStatus=INTERACTIVE_MESH_EDITING;
+	interactiveOptionWidgetHasInit=true;
+	delete ImageLabel;
+	ImageLabel=new InteractiveMeshEditingLabel(io,symmIO,ui.centralWidget);
+	initImageLabel();
+	((InteractiveMeshEditingLabel *)ImageLabel)->displayTriangle();
+	updateToolBar();
+	//updateDisplayImage();
 }
 void ImageProcessSystem::interacitveColorBalanceTriggered()
 {
@@ -825,6 +845,7 @@ void ImageProcessSystem::updateToolBar()
 			ui.actionSwitch->setEnabled(false);
 			ui.actionInteractiveFace->setEnabled(false);
 			ui.actionInteractiveTriangle->setEnabled(false);
+			ui.actionMeshEditing->setEnabled(false);
 			if(images.empty())
 				ui.actionCancel->setEnabled(false);
 			else
@@ -891,6 +912,14 @@ void ImageProcessSystem::updateToolBar()
 			{
 				ui.actionInteractiveColorBalance->setIcon(QIcon(QString::fromUtf8(":/pictures/trianglnoteselected.jpg")));
 			}
+			if(interactiveStatus&INTERACTIVE_MESH_EDITING)
+			{
+				ui.actionMeshEditing->setIcon(QIcon(QString::fromUtf8(":/pictures/meshEditingSelected.jpg")));
+			}
+			else
+			{
+				ui.actionMeshEditing->setIcon(QIcon(QString::fromUtf8(":/pictures/mesheditingnotselected.jpg")));
+			}
 		}
 	}
 	else
@@ -911,6 +940,7 @@ void ImageProcessSystem::updateToolBar()
 		ui.actionInteractiveColorLevel->setEnabled(true);
 		ui.actionInteractiveColorBalance->setEnabled(true);
 		ui.actionInteractiveTriangle->setEnabled(true);
+		ui.actionMeshEditing->setEnabled(true);
 		if(images.empty())
 			ui.actionCancel->setEnabled(false);
 		else
@@ -926,6 +956,7 @@ void ImageProcessSystem::updateToolBar()
 		ui.actionInteractiveColorLevel->setIcon(QIcon(QString::fromUtf8(":/pictures/colorlevelnotselected.jpg")));
 		ui.actionInteractiveColorBalance->setIcon(QIcon(QString::fromUtf8(":/pictures/colorbalancenotselected.jpg")));
 		ui.actionInteractiveTriangle->setIcon(QIcon(QString::fromUtf8(":/pictures/trianglnoteselected.jpg")));
+		ui.actionMeshEditing->setIcon(QIcon(QString::fromUtf8(":/pictures/mesheditingnotselected.jpg")));
 		ui.actionSwitch->setEnabled(false);
 	}
 }

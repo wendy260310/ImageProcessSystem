@@ -146,7 +146,7 @@
     <ClCompile Include="InteractiveTriangleLabel.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="MeshEditingLabel.cpp">
+    <ClCompile Include="InteractiveMeshEditingLabel.cpp">
       <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -249,7 +249,7 @@
     <ClInclude Include="InteractiveTriangleLabel.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="MeshEditingLabel.h">
+    <ClInclude Include="InteractiveMeshEditingLabel.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>

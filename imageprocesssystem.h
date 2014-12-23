@@ -42,6 +42,7 @@ public:
 	~ImageProcessSystem();
 public slots:
 	void interactiveTriangleActionTriggered();
+	void interactiveMeshEditingActionTriggered();
 	void interactiveLacalEnhencementActionTriggered();
 	void intercativeHighlightActionTriggered();
 	void interactiveColorCorrectionActionTriggered();

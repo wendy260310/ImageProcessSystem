@@ -132,7 +132,7 @@
     <ClCompile Include="InteractiveTriangleLabel.cpp" />
     <ClCompile Include="LocalEnhencementLabel.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MeshEditingLabel.cpp" />
+    <ClCompile Include="InteractiveMeshEditingLabel.cpp" />
     <ClCompile Include="OriginalImageLabel.cpp" />
     <ClCompile Include="setColorParametersDialog.cpp" />
     <ClCompile Include="SLIC.cpp" />
@@ -170,7 +170,7 @@
     <ClInclude Include="header.h" />
     <ClInclude Include="ImageTriangle.h" />
     <ClInclude Include="InteractiveTriangleLabel.h" />
-    <ClInclude Include="MeshEditingLabel.h" />
+    <ClInclude Include="InteractiveMeshEditingLabel.h" />
     <ClInclude Include="Poisson.h" />
     <ClInclude Include="SLIC.h" />
     <ClInclude Include="triangle\triangle.h" />

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'setColorParameters.ui'
 **
-** Created: Mon Dec 15 16:10:31 2014
+** Created: Fri Dec 19 14:48:43 2014
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
